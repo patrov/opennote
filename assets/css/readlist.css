@@ -1,0 +1,6 @@
+#readlist-app #List .item {padding-left: 10px;}
+#readlist-app #List .top {border-left: 4px solid #27AE60}
+#readlist-app #List .hight{border-left:4px solid #e67e22}
+#readlist-app #List .medium{border-left:4px solid #7f8c8d}
+#readlist-app #List .low{border-left: 4px solid #bdc3c7}
+#readlist-app #List .author {font-weight: bold}
