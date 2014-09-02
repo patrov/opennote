@@ -50,6 +50,10 @@ define("ReadList.models",["Kimo/core"], function(Kimo) {
                 });
             },
             
+            getPath: function(){
+                return "/cnamOpennote/webservices/contents";
+            },
+            
             onContainerInit: function(data) {
                 if (this.contentList) {
                     var contents = this.contentList.toArray(true);
@@ -172,7 +176,10 @@ define("ReadList.models",["Kimo/core"], function(Kimo) {
         var BookRepository = ModelManager.createRepository({
             repositoryName: "BookRepository", //modifier chan
             route: "",
-            model: documentEntity //user string or prefix
+            model: documentEntity, //user string or prefix
+            getPath: function(){
+                return "/cnamOpennote/webservices/contents";
+            }
         })
 
         BookRepository = new BookRepository;

@@ -40,8 +40,8 @@ define("ReadList",
                     }
                 }
             },
+            
             onStart: function() {
-                
                 $(".mainWrapper").on("click", "#searhBtn", function(e) {
                     var searchValue = $("#searhField").val();
                     var container = $("#searchFieldWrapper");
@@ -50,8 +50,9 @@ define("ReadList",
                         params: [searchValue, container]
                     });
                 });
-                Kimo.ModelManager.useAdapter(Kimo.AdapterRegistry.get("jsonrpc"));
+                Kimo.ModelManager.useAdapter(Kimo.AdapterRegistry.get("restAdapter"));
             },
+            
             onNotification: function(message) {
                 /*according to message, call appropriate activity*/
                 if (message.topic === "newContent") {

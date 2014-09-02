@@ -18,12 +18,13 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
                 this.listView = this._createDataList();
                 this._bindEvents();
             },
+            
             onStop: function() {
                 this.listView.reset();
             },
-            onResume: function() {
-
-            },
+            
+            onResume: function() {},
+            
             _bindEvents: function() {
                 var self = this;
                 this.repository.on("change", $.proxy(this._handleRepoChange, this));
