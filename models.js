@@ -64,7 +64,7 @@ define("ReadList.models",["Kimo/core"], function(Kimo) {
             loadContents: function(start, limit) {
                 start = 1;
                 limit = 10;
-                var promise = makeRequest("ws_data.findContents", {
+                var promise = makeRestRequest(this.getPath()+"/findContent", {
                     params: {
                         criteria: {
                             container: this.getCtnKey()
