@@ -1,3 +1,5 @@
+<section id="template">
+    
 <script id="data-wrapper" type="text/html">
     <div id="mainboard-form-view" class="container-fluid">
         <div class="row-fluid">
@@ -18,7 +20,7 @@
             {{#contents}}
               <div class="media">
                     <a href="#" class="pull-left">
-                        <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg==">
+                        <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
                     </a>
                     <div class="media-body">
                       <h4 class="media-heading">{{__entity__}}</h4>
@@ -36,8 +38,6 @@
             <div class="resultCtn span8"></div>
         </div>
    </div>
-
-
 </script>
 
 <script id="user-view-tpl" type="text/html">
@@ -81,7 +81,7 @@
             <div class="media-list">
                 <div class="media">
                     <a href="#" class="pull-left">
-                        <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg==">
+                        <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
                     </a>
                     <div class="media-body">
                       <h4 class="media-heading">Il don't get it</h4>
@@ -92,10 +92,11 @@
         </div>
     </div>
 </script>
+
 <script id="book-suggestion-tpl" type="text/html">
     <div class="media book-suggestion-item">
         <a href="#" class="pull-left">
-            <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="{{volumeInfo.imageLinks.thumbnail}}">
+            <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="{{volumeInfo.imageLinks.thumbnail}}"/>
         </a>
         <div class="media-body">
           <h4 class="media-heading"> {{volumeInfo.title}}</h4>
@@ -118,21 +119,20 @@
 <script id="export-item-tpl" type="text/html">
     <div class="media">
         <a href="#" class="pull-left">
-          <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg==">
+          <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
         </a>
         <div class="media-body">
           <h4 class="media-heading">{{__entity__}}</h4>
           <p>{{content}}</p>
         </div>
-      </div> 
-    </div>
+  </div> 
 </script>
 
 
 <script id="generic-dialog-tpl" type="text/html">
   <div id="content-modal" class="modal hide fade">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h3 class="modal-title">Modal header</h3>
     </div>
     <div class="modal-body">
@@ -143,7 +143,6 @@
         <a data-action="save" href="javascript:;" class="btn action-btn btn-primary">Save changes</a>
     </div>
 </div>
-
 </script>
 <script id="content-type-list-tpl" type="text/html">
     <div class="toolbar btn-group">
@@ -267,3 +266,4 @@
             </div>
     </div>
 </script>
+</section>

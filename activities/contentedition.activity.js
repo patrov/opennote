@@ -178,6 +178,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                     return emptyFragment;
                 self._initContentType(contentType);
                 var renderer = Mustache.render(self.currentContentType.getContentTemplate(), data);
+                console.log(self.currentContentType.getUid());
                 renderer = $(renderer).attr("data-contentType", contentType);
                 if (data.hasOwnProperty("uid")) {
                     $(renderer).attr("item-uid", data.uid);

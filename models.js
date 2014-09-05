@@ -1,6 +1,5 @@
 var ReadList = ReadList || {};
-define("ReadList.models",["Kimo/core"], function(Kimo) {
-    console.log("kimo",Kimo);
+define(["Kimo/core"], function(Kimo) {
     var ModelManager = require("Kimo.ModelManager");
     ReadList.models = (function() {
 
@@ -61,18 +60,14 @@ define("ReadList.models",["Kimo/core"], function(Kimo) {
                 }
             },
             
-            loadContents: function(start, limit) {
+            loadContents: function(start, limit, order) {
                 start = 1;
                 limit = 10;
-                var promise = makeRestRequest(this.getPath()+"/findContent", {
-                    params: {
-                        criteria: {
-                            container: this.getCtnKey()
-                        },
-                        order: "",
-                        start: start,
-                        limit: limit
-                    }
+                order = "updated_at";
+                var promise = Kimo.Utils.makeRestRequest(this.getPath()+"/subcontents",
+                {
+                    type: "GET",
+                    data: {container:this.getCtnKey(), order:order, start:start, limit:limit }
                 });
                 promise.done($.proxy(this.initSubContents, this)).fail($.proxy(this.handleError, this));
                 return promise;
