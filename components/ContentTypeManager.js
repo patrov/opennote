@@ -39,6 +39,9 @@ var  ContentTypePluginManager = (function(){
                 config.defaults["container"] = "";
                 config.defaults["uid"] = null; //use defaut id key
                 config.defaults["__contentType__"] = this.getName();
+                if(!config.hasOwnProperty("getPath")){
+                    config.getPath = function(){return "webservices/contents" }
+                }
                 var entity = Kimo.ModelManager.createEntity(config);
                 _entitiesMap[name] = entity;
             }

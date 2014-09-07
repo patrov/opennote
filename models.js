@@ -50,7 +50,7 @@ define(["Kimo/core"], function(Kimo) {
             },
             
             getPath: function(){
-                return "/cnamOpennote/webservices/contents";
+                return "/cnamOpennote/webservices/books";
             },
             
             onContainerInit: function(data) {
@@ -64,7 +64,7 @@ define(["Kimo/core"], function(Kimo) {
                 start = 1;
                 limit = 10;
                 order = "updated_at";
-                var promise = Kimo.Utils.makeRestRequest(this.getPath()+"/subcontents",
+                var promise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
                 {
                     type: "GET",
                     data: {container:this.getCtnKey(), order:order, start:start, limit:limit }
@@ -134,7 +134,7 @@ define(["Kimo/core"], function(Kimo) {
                 if (!content.isNew()) {
                     /* update content */
                     this.contentList.replaceItem(content);
-                    this._cidUidMap[content.uid] = content
+                    //this._cidUidMap[content.uid] = content
                 }
                 contentJson["_cid"] = content.getCid();
                 this._cidUidMap[content.uid] = content.getCid();

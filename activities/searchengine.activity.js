@@ -34,10 +34,10 @@ define(["Kimo/core"], function(Kimo) {
 
             $(this.form).delegate(".btn", "click", function() {
                 var term = $(this).prev(".search_field").eq(0).val();
-                makeRequest("ws_data.search", {
-                    params: {
-                        critetia: term,
-                        mainContainer: self.mainContainer
+                Kimo.Utils.makeRestRequest("/webservice/contents/search", {
+                    data: {
+                        q: term,
+                        mainContainer: self.mainContainer //localiser // tout la base
                     },
                     "success": function(response) {
                         self.onSearch(response.result);
@@ -92,11 +92,7 @@ define(["Kimo/core"], function(Kimo) {
             var self = this;
             $(".showsuggestion-btn").trigger("click");
             $("#suggestionCtn").html($("<p>Loading...</p>").clone());
-            makeRequest("ws_data.getSimilarContent", {
-                params: {
-                    content: content
-                }
-            }).done($.proxy(self.showSuggestions, self));
+            Kimo.Utils.makeRestRequest("/webservices/contents/suggest/"+content.getUid()).done($.proxy(self.showSuggestions, self));
         }
     });
 });
