@@ -12,6 +12,22 @@
     </div>
 </script>
 
+<script id="edit-book-tpl" type="text/mustache">
+    <div>
+    <h3>Créer/Editer un livre</h3>
+    <div class="row">
+       <div class="span4">
+            <div class="media">
+                <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
+                <div class="media-body"></div>
+            </div>
+         </div>
+       <div class="span8">
+            <div id="form-ctn"></div>  
+       </div>
+    </div>
+        </div>
+</script>
 
 <script id="search-result-tpl" type="text/mustache">
     <div class="results-ctn">
@@ -190,16 +206,16 @@
 </script>
 
 <script id="formBtn-tpl" type="text/html">
-    <p><input type="submit" data-role="save" class="form-btn btn-link" value="Enregistrer"><input type="button" data-role="cancel" class="form-btn btn-link" value="Annuler"></p>
+    <p><input type="submit" data-role="save" class="form-btn btn-link" value="Enregistrer"/><input type="button" data-role="cancel" class="form-btn btn-link" value="Annuler"/></p>
 </script>
 
-<!-----STEPS----->
 <script id="step-content-tpl" type="text/html">
      <div class="step-content-item">
          <p><span><i class="fa fa-list fa-2x"></i></span> page <span>{{start}}</span> - <span>{{end}}</span></p>
          <p class="main-content">{{summary}}</p>
          <p class="steps-stat"></p>
          <div class="item-container"></div>
+     </div>
 </script>
 
 <script type="text/html" id="step-stats-tpl">
@@ -210,7 +226,7 @@
 
 <script id="step-content-note-tpl" type="text/html">
     <div class="noteContainer">
-        <p><i> Note ({{count}})</p>
+        <p><i> Note ({{count}})</i></p>
         {{#notes}}
                 <div class="step-item">{{content}}</div>
         {{/notes}}
@@ -232,17 +248,14 @@
         {{/.}}
     </div>
 </script>
-<!---STEPS--->
 
 <script id="edit-board-tpl" type="text/html">
     <div id="edit-board">
         <div id="board-wrapper">
+            
             <ul class="nav nav-pills">
                 <li class="disabled">
                     <a data-sectiontoshow="edit" class="content-action edit-btn" href="#">Créer/éditer</a>
-                </li>
-                <li>
-                    <a data-sectiontoshow="search" class="content-action search-btn" href="#"><i class="fa fa-search-plus"> Search</i></a>
                 </li>
                  <li>
                     <a data-sectiontoshow="suggestion" class="content-action showsuggestion-btn" href="#"><i class="fa fa-lightbulb-o"> Suggestion</i></a>
@@ -261,9 +274,9 @@
                 
             <div class="tabContent searchSection" style="display:none">Search content</div>
             <div class="tabContent suggestionSection" style="display:none">
-                <div id="suggestionCtn" style="position:relative; top:50px; text-align: left">
-                </div>
+                <div id="suggestionCtn" style="position:relative; top:50px; text-align: left"></div>
             </div>
     </div>
+ </div>
 </script>
 </section>

@@ -5,11 +5,10 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
     Kimo.ActivityManager.createActivity("EditActivity", {
         appname: "ReadList",
         initView: function() {
-            var mainView = $("<div id='cooklist-form-view'>Radical blaze</div>").clone()
             var a = {
                 name: "readlist-form-view",
                 title: "Form view",
-                contentEl: mainView
+                contentEl: $("#edit-book-tpl").html()
             };
             this.setContentView(a);
         },
@@ -79,7 +78,7 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
             this.repository = ReadList.models.bookRepository;
             var container = $('<div class="documentItem Container" />');
             this.documentForm.render(container);
-            this.view.setContent($(container));
+            $(this.view.view).find("#form-ctn").append($(container));
         },
         bindEvents: function() {
             var self = this;
