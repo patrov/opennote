@@ -78,7 +78,7 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
             this.repository = ReadList.models.bookRepository;
             var container = $('<div class="documentItem Container" />');
             this.documentForm.render(container);
-            $(this.view.view).find("#form-ctn").append($(container));
+            $(this.view.view).find("#form-ctn").html($(container));
         },
         bindEvents: function() {
             var self = this;

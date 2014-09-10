@@ -19,7 +19,9 @@
        <div class="span4">
             <div class="media">
                 <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
-                <div class="media-body"></div>
+                <div class="media-body">
+                    <a href="javascript:;"> > Ajouter une couverture</a>
+                </div>
             </div>
          </div>
        <div class="span8">

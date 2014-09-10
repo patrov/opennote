@@ -28,7 +28,8 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
             this.createEntity("Note", {
                 defaults: {
                     content: "",
-                    tags: []
+                    tags: "",
+                    "__indexation__":"content,container,tags:csv"
                 },
                 checkData: function() {
                     var result = true;
@@ -112,7 +113,8 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     source: "",
                     content: "",
                     comment: "",
-                    tags: []
+                    tags: "",
+                    "__indexation__":"page,context,container,source,content,comment,tags:csv"
                 },
                 checkData: function() {
                     var result = true;
@@ -224,7 +226,8 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 defaults: {
                     title: "",
                     embed: "",
-                    tags: []
+                    tags: [],
+                    "__indexation__":"title,tags:csv,container"
                 },
                 /*put to queue: create queue */
                 scheduleDownload: function() {
@@ -272,7 +275,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     },
                     embed: {
                         label: "Video",
-                        type: "textarea"
+                        type: "text"
                     },
                     tags: {
                         label: "Mot-clé",

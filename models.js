@@ -19,20 +19,15 @@ define(["Kimo/core"], function(Kimo) {
                 title: "",
                 subtitle: "",
                 author: "",
-                note: "",
                 publisher: "",
                 place: "",
                 year: "",
                 pages: "",
-                type: 1,
-                state: 1, //not read,reading, read 
-                source: "",
-                priority: "",
                 contents: [],
                 tags: "",
-                cover: null,
+                cover: null,//path
                 extra: {},
-                "__indexation__" : ["title","subtitle","author:array","publisher","place","year","tags:array"]
+                "__indexation__" : ["title","subtitle","author:cs","pages","publisher","place","year","tags:csv"]
             },
             
             lastEditedContent: null,
