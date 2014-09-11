@@ -29,7 +29,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 defaults: {
                     content: "",
                     tags: "",
-                    "__indexation__":"content,container,tags:csv"
+                    "__indexation__":["content","container","tags:csv"]
                 },
                 checkData: function() {
                     var result = true;
@@ -114,7 +114,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     content: "",
                     comment: "",
                     tags: "",
-                    "__indexation__":"page,context,container,source,content,comment,tags:csv"
+                    "__indexation__":["page","context","container","source","content","comment","tags:csv"]
                 },
                 checkData: function() {
                     var result = true;
@@ -227,7 +227,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     title: "",
                     embed: "",
                     tags: [],
-                    "__indexation__":"title,tags:csv,container"
+                    "__indexation__":["title","tags:csv","container"]
                 },
                 /*put to queue: create queue */
                 scheduleDownload: function() {

@@ -54,10 +54,8 @@ define(["Kimo/core"], function(Kimo) {
         },
         
         doSearchAction: function(term) {
-           makeRequest("ws_data.search", {
-                    params: {
-                        critetia: term
-                    }
+           Kimo.Utils.makeRestRequest("/webservice/contents/search", {
+                    data: { q:term }
                 }).done($.proxy(this.handleResult,this));
         },
         
