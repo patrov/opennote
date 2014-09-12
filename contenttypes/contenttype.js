@@ -51,7 +51,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     tags: {
                         label: "Mots-clés",
                         type: "text",
-                        placeholder: "mots-clés séparé par une virgule"
+                        placeholder: "mots-clés séparés par une virgule"
                     }
                 },
                 /*rendre automatique interne*/
@@ -177,11 +177,12 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     comment: {
                         label: "Ajouter un commentaire",
                         placeholder: "Commen de la citation",
-                        type: "textarea"
+                        type: "textarea",
+                        collapsible: true
                     },
                     tags: {
                         label: "Mot clés",
-                        placeholder: "mots-clés séparé par une virgule",
+                        placeholder: "mots-clés séparés par une virgule",
                         type: "text"
                     }
                 }

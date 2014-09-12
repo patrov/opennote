@@ -76,6 +76,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         
         _handleContentChanged: function(currentContent) {
             this.currentContent = currentContent;
+            ContentTypePluginManager.setMainContent(currentContent);
             this.currentForm = null;
             this.currentType = null;
             this.nxtAction = null;
@@ -96,6 +97,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 self.contentList.setData(self.currentContent.getContents(), true);
             });
         },
+        /*no need*/
         onSearchResult: function(contents) {
             if (!$.isArray(contents))
                 return;
@@ -287,17 +289,21 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         _addNewContent: function(action) {
             var self = this;
-            var entity = this.currentForm.getData(); //row data //handle dyne
+            var entity = this.currentForm.getData(); //row data
             action = this.nxtAction || "update";
             if (typeof entity.save !== "function") {
+                action = "create";
                 var data = entity.data;
-                entity = ContentTypePluginManager.createContent(data.__entity__); //item show have uid here
+                entity = ContentTypePluginManager.createContent(data.__entity__);
                 entity.set(data);
+            }else{
+                action = (entity.isNew()) ? "create" : "update";
             }
 
             entity.set("container", this.currentContent.getCtnKey());
-            /* avant enregistrement --> donner la chance de faire quelque chose */
+            /* avant enregistrement --> donner la chance au plugin de faire quelque chose */
             self.currentContentType.onBeforeEntitySave(entity).then(function(entity) {
+                /* acceler le rendu ici */
                 entity.save().then(function(response) {
                     self.currentContentType.onEntitySave(entity);
                     self.nxtAction = null;
@@ -425,10 +431,11 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             });
         },
         
+        /* ... dissocier la création du formulaire ... */
         onSubmitForm: function() {
             this._addNewContent();
         }
-
+        
     });
 
 });

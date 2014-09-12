@@ -88,7 +88,8 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             selectedDocument = this.repository.findByCid($(selectedDocument).attr("id"));
             if (!selectedDocument)
                 return;
-               
+               console.log("ici");
+               console.log("selected",selectedDocument);
             ContentTypePluginManager.setMainContent(selectedDocument);
             this.navigateTo("contentboard:show", {
                 selectedDocument: selectedDocument
