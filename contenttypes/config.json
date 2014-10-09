@@ -1,0 +1,6 @@
+{
+    "name": "Administrateur",
+    "path": "js/apps/readlist/contenttypes",
+    "disabled": [],
+    "plugins" : ["biblio"]   
+}

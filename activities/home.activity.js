@@ -22,7 +22,9 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             if(this.listView) this.listView.reset();
         },
             
-        onResume: function() {},
+        onResume: function() {
+            this.listPromise =  this._createDataList();
+        },
             
         _bindEvents: function() {
             var self = this;
@@ -88,8 +90,8 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             selectedDocument = this.repository.findByCid($(selectedDocument).attr("id"));
             if (!selectedDocument)
                 return;
-               console.log("ici");
-               console.log("selected",selectedDocument);
+            console.log("ici");
+            console.log("selected",selectedDocument);
             ContentTypePluginManager.setMainContent(selectedDocument);
             this.navigateTo("contentboard:show", {
                 selectedDocument: selectedDocument
@@ -118,7 +120,7 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
 
             var itemRender = function(entity) {
                 var templateItem = '<div id="{{_cid}}" data-uid="{{_cid}}" class="item"><h3 class="title" data-field-name=""><i class="fa fa-file-text-o fa-1x"></i> {{title}}</h3><span class="author">{{author}}</span><span>, {{publisher}} <em>{{place}}</em> {{year}}</span></div>';
-               return Mustache.render(templateItem, entity);
+                return Mustache.render(templateItem, entity);
             }
             
             this.listView = new Kimo.DataView({
@@ -172,7 +174,7 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
         
         
         showDocImporterForm: function() {
-            this.navigateTo("DocumentImportActivity", {});
+            this.navigateTo("content:import", {});//fix last route
         }
     });
   

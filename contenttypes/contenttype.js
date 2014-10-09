@@ -1,6 +1,6 @@
-define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
+define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypePluginManager) {
     
-    ContentTypePluginManager.registerContentType("NoteType", {
+  ContentTypePluginManager.registerContentType("NoteType", {
         _settings: {},
         
         events: {},
@@ -31,6 +31,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     tags: "",
                     "__indexation__":["content","container","tags:csv"]
                 },
+                
                 checkData: function() {
                     var result = true;
                     if ($.trim(this.getContent()) == "")
@@ -39,6 +40,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 }
             });
         },
+        
         createForms: function() {
             this.createForm("NoteForm", {
                 map: {
@@ -54,7 +56,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                         placeholder: "mots-clés séparés par une virgule"
                     }
                 },
-                /*rendre automatique interne*/
                 validator: function(data) {
                     var isValid = true;
                     var errors = [];
@@ -99,7 +100,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
 
 
     /* quote */
-    ContentTypePluginManager.registerContentType("QuoteType", {
+   ContentTypePluginManager.registerContentType("QuoteType", {
         _settings: {},
         events: {},
         _init: function() {
@@ -136,6 +137,29 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
         createForms: function() {
             this.createForm("QuoteForm", {
                 data: {},
+                map: {
+                    page: {
+                        label: "Page",
+                        type: "text",
+                        placeholder: "Page de la citation"
+                    },
+                    content: {
+                        label: "Contenu de la citation",
+                        placeholder: "Corps de la citation",
+                        type: "textarea"
+                    },
+                    comment: {
+                        label: "Ajouter un commentaire",
+                        placeholder: "Commen de la citation",
+                        type: "textarea",
+                        collapsible: true
+                    },
+                    tags: {
+                        label: "Mot clés",
+                        placeholder: "mots-clés séparés par une virgule",
+                        type: "text"
+                    }
+                },
                 validator: function(data) {
                     var isValid = true;
                     var errors = [];
@@ -162,29 +186,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     }
                     this.handleError(errors);
                     return isValid;
-                },
-                map: {
-                    page: {
-                        label: "Page",
-                        type: "text",
-                        placeholder: "Page de la citation"
-                    },
-                    content: {
-                        label: "Contenu de la citation",
-                        placeholder: "Corps de la citation",
-                        type: "textarea"
-                    },
-                    comment: {
-                        label: "Ajouter un commentaire",
-                        placeholder: "Commen de la citation",
-                        type: "textarea",
-                        collapsible: true
-                    },
-                    tags: {
-                        label: "Mot clés",
-                        placeholder: "mots-clés séparés par une virgule",
-                        type: "text"
-                    }
                 }
             })
         },
@@ -211,7 +212,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
     });
 
     /* video */
-    ContentTypePluginManager.registerContentType("VideoType", {
+   ContentTypePluginManager.registerContentType("VideoType", {
         _settings: {},
         events: {
             "itemSelected": "callback",
@@ -230,7 +231,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                     tags: [],
                     "__indexation__":["title","tags:csv","container"]
                 },
-                /*put to queue: create queue */
                 scheduleDownload: function() {
                     this.addToDownloadQueue(this);
                 },
@@ -286,10 +286,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
             });
 
         },
-        /**
-         * Template has the same name as the plugin video-tpl
-         * many templates can be used if a class is provided
-         **/
+        
         getContentTemplate: function(name) {
             var tpl = "<div><p><span><i class='fa fa-play-circle fa-2x'></i></span></p><p>{{title}}</p><div>{{{embed}}}</div><div class='tag-container'><i class='fa fa-tags'></i> {{tags}}</div></div>";
             return tpl;
@@ -349,6 +346,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 }
             });
         },
+        
         onItemSelected: function(item, entity) {
             this.currentEntity = entity;
             this.currentEntity._setStepRender(item);
@@ -356,7 +354,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
             entity.updateStepStats();
             this._handleItemEvents(item, entity);
         },
-        /* avant de rendre le formulaire */
+        
         beforeFormRender: function(form, entity) {
             var dfd = new $.Deferred();
             var render_form = dfd.promise();
@@ -411,7 +409,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                             $(item).append($(actions));
                         },
                         init: function() {
-                            /*handler root according to entity type*/
                             var type = this.entity.name;
                             this.itemTemplate = $(this.templatesMap[type]).html();
                             this.root = $(Mustache.render(this.itemTemplate, this.entity.toJson()));
@@ -489,7 +486,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                         idKey: "uid"
                     });
                 },
-                /* strange refactoring is needed */
                 _setStepRender: function(render) {
                     this.container = render;
                 },
@@ -512,9 +508,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 onError: function() {
                     console.log("Error while loading");
                 },
-                /**
-                 * show steps stats for the current steps
-                 */
+                
                 updateStepStats: function() {
                     var self = this;
                     var stats = {};
@@ -563,15 +557,16 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                         dfd.resolve(this.rawResponse);
                         return dfd.promise();
                     }
-                    /*handle multiple view form contents*/
                     this.container = container;
-                    var promise = makeRequest("ws_data.findContents", {
-                        params: {
-                            criteria: {
-                                container: this.getCtnKey()
+                    var promise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
+                    {
+                        type: "GET",
+                        data: {
+                            container:this.getCtnKey()
                             }
-                        }
                     });
+                    
+                    
                     promise.done($.proxy(this.initSteps, this)).fail($.proxy(this.onError, this));
                     return promise;
                 },
@@ -593,7 +588,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 initSteps: function(response) {
                     this.isLoaded = true;
                     var steps = response.result;
-                    var contents = {};
                     var key = "form_";
                     this.updateSteps(steps);
                 },
@@ -626,7 +620,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                             message: ""
                         });
                     }
-                    /*handle subform */
                     var subForms = this.getField("steps").getSubForms();
                     $.each(subForms, function(key, form) {
                         form.validate();
@@ -703,12 +696,10 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 }
             });
         },
-        afterRender: function(item) {
+        afterRender: function (item) {
 
         },
-        /*When the main entity is saved we need to save his subcontents too
-         * and if the subcontent is a quote, we need
-         **/
+        
         onEntitySave: function(entity) {
             var steps = entity.get("steps");
             var subContents = [];
@@ -723,7 +714,6 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
                 }
             });
             entity.updateStepStats();
-            /*only content that has changed is updated*/
             makeRequest("ws_data.batchAction", {
                 params: {
                     action: "createOrUpdate",
@@ -743,7 +733,7 @@ define(["ReadList.ContentTypePluginMng"], function(ContentTypePluginManager) {
             console.log("sdsd");
         },
         onEntityDelete: function() {
-            console.log("raidacl blaze");
+            console.log("radical blaze");
         },
         getContentTemplate: function(name) {
             var tpl = $("#step-content-tpl").html();

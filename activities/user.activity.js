@@ -1,4 +1,4 @@
-define(["Kimo/core"], function() {
+define(["Kimo/core"], function(Kimo) {
     Kimo.ActivityManager.createActivity("UserActivity", {
         appname:"ReadList",
         initView: function() {
@@ -24,11 +24,12 @@ define(["Kimo/core"], function() {
         
         logoutAction: function(){
             var self = this;
-            $(this.view.view).html($("<p>You'll be redirected to home in 10sc</p>").clone());
-            setTimeout(function(){
-                self.navigateTo("home:home",{radical:"blaze"});
+            $(this.view.view).html($("<p>Disconnecting...</p>").clone());
+            Kimo.Utils.makeRestRequest(appPath+"webservices/members/logout").done(function(){
+                document.location.href = appPath;   
+            }).fail(function(){
                 
-            },10000);
+            });
         },
         
         onCreate: function() {

@@ -11,19 +11,32 @@ define(["Kimo.NavigationManager"],function(NvgManager){
             url:"#/content/showboard/{id}",
             action: "ContentEditionActivity:showBoard"
         },
+        
         "content:search":{
             url: "#/content/search?q={q}",
             action:"SearchEngineActivity:doSearch"
+        },
+        
+        "content:admin": {
+        url: "#/opennote/admin",
+        action: ""
         },
         
         "content:edit":{
             url: "#/content/edit/{id}",
             action: "EditActivity:edit"
         },
+        
         "content:create":{
             url :"#/content/create",
             action: "EditActivity:create"
         },
+        
+        "content:import": {
+            url: "#/content/import",
+            action: "DocumentImportActivity:showForm"
+        },
+        
         "user:account":{
             url: "#/user/account",
             action: "UserActivity:account"

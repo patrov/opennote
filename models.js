@@ -60,7 +60,7 @@ define(["Kimo/core"], function(Kimo) {
             loadContents: function(start, limit, order) {
                 start = 1;
                 limit = 10;
-                order = "updated_at";
+                order = "updatedAt";
                 var promise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
                 {
                     type: "GET",

@@ -7,8 +7,6 @@
 
 define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
 
-
-
     Kimo.ActivityManager.createActivity("DocumentImportActivity", {
         appname: "ReadList",
         initView: function() {
@@ -22,9 +20,12 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         
         onCreate: function(){
             /* getParameters */
-           this.importForm = ReadList.forms.bookImportForm;
-           this.importForm.render($("#form-ctn"));
-           this.bindEvents();
+            this.importForm = ReadList.forms.bookImportForm;
+        },
+        
+        showFormAction: function(){
+            this.importForm.render(this.view.view.find("#form-ctn"));
+            this.bindEvents();
         },
         
         bindEvents: function(){
@@ -35,11 +36,8 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         handleForm: function(formData){
-           var bookInfos = formData.data.rawData.search;
-           this.navigateTo("EditActivity",{
-               data: bookInfos,
-               mode: "export"
-           });
+            var bookInfos = formData.data.rawData.search;
+            this.navigateTo('content:create',{data:bookInfos, mode:"export"},null);
         },
         
         onResume: function(){

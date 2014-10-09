@@ -96,17 +96,6 @@
         <div class="span10">
             <h2>Importer un document</h2>
             <div id="form-ctn"></div>
-            <div class="media-list">
-                <div class="media">
-                    <a href="#" class="pull-left">
-                        <img data-src="holder.js/64x64" class="media-object" alt="64x64" style="width: 45px; height: 45px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABZklEQVR4nO2UMY7DIBQFc/+j/I6Oho6Okp4jcIW/xQoL47hI7GS02leM5CTO1zDYPHrv/p950AI0CkAL0CgALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0twQws41SyuH3Wqubmeec0ZkfCRBC8JSS9949peRm5q21wz2vyH5i5kcCjF2otZ7ek3P2GONOdvxvLDLnvM15dyYSoJTiZrbJrOKtte27VXbe2TnGlZlYgLPHNcboKaVNepWd3/O7ZiIBxg6Nz6WU7bq1dio7FjcWe8fMrwZY39dZdn6EZ2KMu/+Ow2zMuDLz6wF6/z2Nh8DY0fWeZ7sVQvAQwuH6ykwkQO/7d/nZ6b3Kzqf+vMvzYl6diQb4yygALUCjALQAjQLQAjQKQAvQKAAtQKMAtACNAtACNApAC9AoAC1AowC0AI0C0AI0CkAL0CgALUCjALQAzQ/MPx+NOPVszAAAAABJRU5ErkJggg=="/>
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">Il don't get it</h4>
-                      <p>This is the way of doing things</p>
-                    </div>
-                </div> 
-            </div>
         </div>
     </div>
 </script>
@@ -243,7 +232,6 @@
 
 <script id="content-suggestion-tpl" type="text/html">
     <div class="content-suggestion">
-        <p><strong>Contenus similaires</strong></p>
         {{#.}}
         <p><strong>{{__entity__}}</strong></p>
         <p>{{content}}</p>
@@ -276,7 +264,10 @@
                 
             <div class="tabContent searchSection" style="display:none">Search content</div>
             <div class="tabContent suggestionSection" style="display:none">
-                <div id="suggestionCtn" style="position:relative; top:50px; text-align: left"></div>
+                <div id="" style="position:relative; top:50px; text-align: left">
+                    <p><strong>Contenus similaires</strong></p>
+                    <div id="suggestionCtn" style="height:auto; overflow-y: scroll; height:550px;"></div>
+                </div>
             </div>
     </div>
  </div>

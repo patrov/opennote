@@ -11,6 +11,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             }
             this.setContentView(a);
         },
+        
         events: {
             ".content-type click": "_test"
         },
@@ -21,7 +22,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 this.contentList.reset();
                 this._resetContentScroller();
             }
-            this._toggleEditBoard();
+            //this._toggleEditBoard();
             /* clean edit form */
             this._resizeBoard("content");
         },
@@ -29,19 +30,18 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         onCreate: function(params) {
             this.dataContainer = $(this.view.view).find(".data-view-ctn").eq(0);
             this.repository  = ReadList.models.bookRepository;
-            /* deal with that isht elsewhere */
-            var searchEngine = ActivityManager.invoke("ReadList:SearchEngineActivity", {
-                method: "getSearchEngine",
-                params: [/*this.currentContent.getCtnKey(),*/ $.proxy(this.onSearchResult, this)]
-            });
-
+            ContentTypePluginManager.initPlugins().done($.proxy(this.initContentTypes,this));  
+            this.configure();
+        },
+        
+        initContentTypes: function(){
             var tplParams = ContentTypePluginManager.getAvailableContentConf();
             var editBoard = Mustache.render($("#edit-board-tpl").html(), tplParams);
             $(this.view.view).find(".edit-zone").append(editBoard);
             this.editSection = $(this.view.view).find(".edit-zone").eq(0);
             this.contentSection = $(this.view.view).find(".data-container").eq(0);
             this.editBoard = $(this.view.view).find("#board-wrapper").eq(0);
-            $(this.editBoard).find(".searchSection").html(searchEngine);
+            //$(this.editBoard).find(".searchSection").html(searchEngine);
             this.defaultContent = $(this.view.view).find("#main-text-container");
             this.formContainer = $(this.view.view).find("#form-container").eq(0);
             this.contentFormWrapper = $(this.view.view).find("#contents-form-container").eq(0);
@@ -49,6 +49,10 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.formAction = $($("#formBtn-tpl").html()).clone();
             this.contentItem = $($("#content-tpl").html()).clone();
             this.editBtn = $(this.editBoard).find(".edit-btn").eq(0);
+        },
+        
+        configure: function(){
+            
             /*create content list*/
             this.contentList = this._createContentList();
             this.contentList.render($(this.dataContainer));
@@ -87,7 +91,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 throw "CurrentContentNotFound";
             this.currentContent.on("change", $.proxy(this._handleCurrentContentChange, this));
             this._renderCurrentDocument();
-            this._populateDataView();
+            ContentTypePluginManager.initPlugins().done($.proxy(this._populateDataView,this));
         },
         _populateDataView: function() {
             var self = this;
@@ -113,6 +117,8 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             try {
                 this.nxtAction = "update";
                 this._initContentType(data.__contentType__); // 1
+                /* switch to edit mode */
+                $(this.editBtn).trigger("click");
                 this._handleForm(data); // 2
             } catch (e) {
                 console.log(e);
@@ -180,7 +186,6 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                     return emptyFragment;
                 self._initContentType(contentType);
                 var renderer = Mustache.render(self.currentContentType.getContentTemplate(), data);
-                console.log(self.currentContentType.getUid());
                 renderer = $(renderer).attr("data-contentType", contentType);
                 if (data.hasOwnProperty("uid")) {
                     $(renderer).attr("item-uid", data.uid);
@@ -283,10 +288,12 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             var render = Mustache.render($("#content-book-tpl").html(), this.currentContent.toJson(true));
             $(this.view.view).find(".header").html(render);
         },
+        
         /*add reset to abstract */
         _initContentType: function(contentType) {
             this.currentContentType = ContentTypePluginManager.initialize(contentType);
         },
+        
         _addNewContent: function(action) {
             var self = this;
             var entity = this.currentForm.getData(); //row data
@@ -301,10 +308,13 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             }
 
             entity.set("container", this.currentContent.getCtnKey());
-            /* avant enregistrement --> donner la chance au plugin de faire quelque chose */
-            self.currentContentType.onBeforeEntitySave(entity).then(function(entity) {
-                /* acceler le rendu ici */
-                entity.save().then(function(response) {
+            /* avant enregistrement --> donner la chance au plugin de faire quelque chose 
+             * user
+             * */
+            self.currentContentType.onBeforeEntitySave(entity).then(function (entity) {
+                
+                if (!entity.checkData()) throw "EntityDataIsNotValid";
+                entity.save().then(function() {
                     self.currentContentType.onEntitySave(entity);
                     self.nxtAction = null;
                     self.currentContent.handleContent(entity, action, self.currentContentType.getName());
@@ -354,11 +364,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 }
             });
             /* handle form submit */
-
-
-            /* Search Mode */
-            $(this.editBoard).delegate(".content-action", "click", function() {
-                /*all all*/
+            $(this.view.view).delegate(".content-action", "click", function() {
                 $(self.editBoard).find(".tabContent").hide();
                 var sectionToShow = $(this).data("sectiontoshow");
                 $(self.editBoard).find("." + sectionToShow + "Section").eq(0).show();
@@ -377,6 +383,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             var lastReason = this.currentContent.getLastContentChangeAction();
             this.contentList.updateData(content, lastReason);
         },
+        
         _toggleEditBoard: function(mode) {
             if (this.editBoardIsVisible || mode == "edit") {
                 this.formContainer.empty();
@@ -431,8 +438,10 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             });
         },
         
-        /* ... dissocier la création du formulaire ... */
+        /* ... dissocier la création d'un contenu du formulaire ... */
         onSubmitForm: function() {
+            alert("inside form submit ... his is it");
+            console.log("this is what I'm telling you");
             this._addNewContent();
         }
         

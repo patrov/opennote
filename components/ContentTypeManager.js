@@ -7,9 +7,11 @@
  * var data = editor.getData(); 
  **/
 define(["Kimo/core"], function(Kimo){
+    
     var  ContentTypePluginManager = (function(){
         var _contentTypes = {};
         var _instances = {};
+        var _isPluginsLoaded = false;
         var _entities = new Kimo.SmartList({
             idKey:"_cid"
         });
@@ -41,14 +43,15 @@ define(["Kimo/core"], function(Kimo){
                     config.defaults["__contentType__"] = this.getName();
                     if(!config.hasOwnProperty("getPath")){
                         config.getPath = function(){
-                            return "webservices/contents"
+                            return "/cnamOpennote/webservices/contents"
                         }
                     }
                     /* histoire */
                     if(config.hasOwnProperty("getIndexationInfos")){
                         console.log("config",config.getIndexationInfos());
                     }
-                
+                    
+                    console.log("config",config);
                     var entity = Kimo.ModelManager.createEntity(config);
                     _entitiesMap[name] = entity;
                 }
@@ -84,7 +87,7 @@ define(["Kimo/core"], function(Kimo){
             },
         
             exposeConfig : function(){
-                console.log("this is it");  
+                console.log("implement exposeConfig");  
             },
         
             getUid: function(){
@@ -228,8 +231,39 @@ define(["Kimo/core"], function(Kimo){
                 var AbstractClone = $.extend(true,{},AbstractContentType);
                 ContentTypeContructor.prototype = $.extend(true, AbstractClone, methods);
                 _contentTypes[name] = ContentTypeContructor;
+            },
+            
+            initPlugins: function(){
+                var def = new $.Deferred(); 
+                $.ajax({
+                    url: appPath+"js/apps/readlist/contenttypes/config.json",
+                    dataType:"json"
+                }).done(function(response){
+                    var pluginPath = response.path;
+                    var plugins = [];
+                    var pluginsName = [];
+                    $.each(response.plugins,function(i,name){
+                        var completePath = appPath+pluginPath+"/"+name+"/main.js";
+                        plugins.push(completePath);   
+                        pluginsName.push(name+".type");
+                    });
+                    if(!plugins.length){
+                        def.resolve();
+                    }else{
+                        Kimo.Utils.requireWithPromise(plugins).done(function(response){
+                            Kimo.Utils.requireWithPromise(pluginsName).done(function(t){
+                                /* all plugins are loaded */
+                                def.resolve();
+                            });
+                        }); 
+                    }
+                    
+                }).fail(function(){
+                    def.reject();
+                });
+                
+                return def.promise();
             }
-   
         }
         return publicApi;
     })();

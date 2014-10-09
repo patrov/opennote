@@ -35,14 +35,22 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
            
         },
         
-        populateFromExportAction:function(){},
+        populateFromExportAction : function(){},
         
-        createAction: function(){
+        createAction: function(linkParam,appParam){
+            var data = (appParam && appParam.data ) ? appParam.data.volumeInfo : false;
+            console.log(data);
+            if($.isPlainObject(data)){
+                data.pages = data.pageCount;
+                data.author = data.authors;
+                data.tags = data.categories.join(",");
+            }
+            console.log("data",data);
             try{
-                var documentItem =  new Models.DocumentItem();
+                var documentItem =  new Models.DocumentItem(data);
                 this._renderForm(documentItem);
             }catch(e){
-                console.log("error while create next document");
+                console.log("error while created document");
             }
         },
         /**** Actions check if user has the right to edit a document ****/
@@ -98,15 +106,13 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
                     promise = self.repository.update(toReadItem);
                     console.log("promise:update", promise);
                 }
+                
                 promise.done(function() {
-                    console.log("I'm here my content is saved");
+                    self.navigateTo("home:home", {
+                        reposity: self.repository
+                    });
                 });
-
-
-                /*Replace navigateTo with a router*/
-                self.navigateTo("home:home", {
-                    reposity: self.repository
-                });
+                
             });
 
             this.documentForm.on("error", function(e) {

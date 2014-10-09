@@ -28,13 +28,13 @@ define(["Kimo/core"], function(Kimo) {
             });
             /* switch to form */
             this.form = $('<div class="form-wrapper"><form class="form-search pull-left">'
-                    + '<input class="search_field" placeholder="Search" type="search"/>'
-                    + '<button type="submit" class="btn"><i class="fa fa-search"></i></button>'
-                    + '</form></div>').clone();
+                + '<input class="search_field" placeholder="Search" type="search"/>'
+                + '<button type="submit" class="btn"><i class="fa fa-search"></i></button>'
+                + '</form></div>').clone();
 
             $(this.form).delegate(".btn", "click", function() {
                 var term = $(this).prev(".search_field").eq(0).val();
-                Kimo.Utils.makeRestRequest("/webservice/contents/search", {
+                Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/search", {
                     data: {
                         q: term,
                         mainContainer: self.mainContainer //localiser // tout la base
@@ -54,14 +54,16 @@ define(["Kimo/core"], function(Kimo) {
         },
         
         doSearchAction: function(term) {
-           Kimo.Utils.makeRestRequest("/webservice/contents/search", {
-                    data: { q:term }
-                }).done($.proxy(this.handleResult,this));
+            Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/search", {
+                data: {
+                    q:term
+                }
+            }).done($.proxy(this.handleResult,this));
         },
         
         handleResult: function(response){
-             var html = Mustache.render($("#search-result-tpl").html(),response.result);
-             $(this.view.view).find(".resultCtn").html(html);
+            var html = Mustache.render($("#search-result-tpl").html(),response.result);
+            $(this.view.view).find(".resultCtn").html(html);
         },
         
         onResume: function() {
@@ -74,7 +76,9 @@ define(["Kimo/core"], function(Kimo) {
         },
         
         public_showSearchResult: function(term, container) {
-            this.navigateTo("content:search",{},{'{q}':term});
+            this.navigateTo("content:search",{},{
+                '{q}':term
+            });
         },
         
 
@@ -83,14 +87,19 @@ define(["Kimo/core"], function(Kimo) {
             /*show to suggestions contents*/
             // $(".tabContent").hide();
             $(".showsuggestion-btn").trigger("click");
-            var suggestions = Mustache.render($("#content-suggestion-tpl").html(), response.result);
-            $("#suggestionCtn").html(suggestions);
+            if(response.result.length){
+                var suggestions = Mustache.render($("#content-suggestion-tpl").html(), response.result);
+                $("#suggestionCtn").html(suggestions);
+            }else{
+                $("#suggestionCtn").html($("<p>Aucun contenu similaire n'a pu être trouvé!</p>"));
+            }
+            
         },
         public_getSimilarContents: function(content) {
             var self = this;
             $(".showsuggestion-btn").trigger("click");
             $("#suggestionCtn").html($("<p>Loading...</p>").clone());
-            Kimo.Utils.makeRestRequest("/webservices/contents/suggest/"+content.getUid()).done($.proxy(self.showSuggestions, self));
+            Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/suggest/"+content.uid).done($.proxy(self.showSuggestions, self));
         }
     });
 });

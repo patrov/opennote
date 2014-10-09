@@ -13,7 +13,8 @@ Kimo.require.config({
         "ReadList.docimporter.activity":"apps/readlist/activities/docimporter.activity",
         "ReadList.contentedition.activity":"apps/readlist/activities/contentedition.activity",
         "ReadList.searchengine.activity":"apps/readlist/activities/searchengine.activity",
-        "ReadList.user.activity":"apps/readlist/activities/user.activity"
+        "ReadList.user.activity":"apps/readlist/activities/user.activity",
+        "ReadList.admin.activity":"apps/readlist/activities/admin.activity"
     }
 });
 
@@ -42,6 +43,7 @@ define("ReadList",
             },
             
             onStart: function() {
+                
                 $(".mainWrapper").on("click", "#searhBtn", function(e) {
                     var searchValue = $("#searhField").val();
                     var container = $("#searchFieldWrapper");
@@ -49,6 +51,9 @@ define("ReadList",
                         method: "showSearchResult", 
                         params: [searchValue, container]
                     });
+                });
+                Kimo.Utils.makeRestRequest(appPath+"webservices/members/current").done(function(response){
+                    $(".current-user").text(response.result.completeName);
                 });
                 Kimo.ModelManager.useAdapter(Kimo.AdapterRegistry.get("restAdapter"));
             },
