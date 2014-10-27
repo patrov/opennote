@@ -17,10 +17,10 @@
 
   <div id="list-tpl">
     <div>
+        <p><i class='fa fa-list-alt fa-1x'></i> <strong>Bibliographie</strong></p>   
     {{#.}}
         <p>
-            <i class='fa fa-list-alt fa-2x'></i> 
-            <span><i>{{author}}</i></span>, <span>{{title}}</span> <span><strong>{{publisher}}</strong> - {{pubYear}}</span>
+            <span><i>{{author}}</i></span>, <span><strong>{{title}}</strong></span>,<span> {{publisher}} - {{pubYear}}</span>
         </p>
     {{/.}}
     </div>

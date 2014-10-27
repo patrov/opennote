@@ -5,10 +5,11 @@
 
 Kimo.require.config({
     paths:{
-        "biblio-tpl": "apps/readlist/contenttypes/biblio/templates/biblio.tpl" 
+        "biblio-tpl": "apps/readlist/contenttypes/biblio/templates/biblio.tpl",
+        "list-tpl": "apps/readlist/contenttypes/biblio/templates/list.tpl"
     }
 });
-define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-tpl"],function(ContentypeManager,Kimo,BiblioTpl){
+define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!biblio-tpl", "ReadList.TemplateManager"], function(ContentypeManager, Kimo, BiblioTpl, TplMng){
     
     var biblioTpl = $(BiblioTpl);
     $("body").append(biblioTpl);
@@ -17,33 +18,44 @@ define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-t
     
     ContentypeManager.registerContentType("BiblioType",{         
         _init: function() {
-        /* bind events here */
+            /* bind events here */
+            this.ctnKey = this.name+":"+this.getUid();
         },
+        
+        /*Quoi faire avant de rendre le formulaire */
+        /*beforeFormRender: function (form, biblio) {
+            console.log("strange");
+            return new $.Deferred().promise();
+        },*/
+        
+        cleanFormData: function(data){
+            $.each(data, function (i, dataItem) {
+                console.log("strange", dataItem);
+            })
+        },
+        
+        /* after the main content has been saved to the database */
         onEntitySave: function(entity){
+            var self = this;
             var biblioItems = entity.get("contents");
             var subContents = [];
             $.each(biblioItems, function (type, formInfos) {
-                var subEntity = ($.isPlainObject(formInfos.data)) ? ContentypeManager.createObjectByJson(formInfos.data) : formInfos.data;
-                if (subEntity.hasChanged()) {
-                    subContents.push(subEntity.toJson());
-                    subEntity.set("container", entity.getCtnKey());
-                }
+                var subEntity = ContentypeManager.createContent("BiblioItem",formInfos.data.data)
+                subEntity.set("container", entity.getCtnKey());
+                subContents.push(subEntity.toJson());
             });
-            console.log("subContents", subContents);
             /* Save biblioItem here */
-            var promise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
+            Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
             {
-                type: "PUT",
+                type: "POST",
                 data: {
-                    container: 
+                    data: JSON.stringify(subContents)
                 }
             });
             
             
         },
-        getCtnKey: function() {
-            return this.name + ":" + this.getUid();
-        },
+       
         createModels: function(){
             this.createEntity("BiblioItem",{
                 defaults: {
@@ -67,9 +79,35 @@ define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-t
                     contents: [],
                     "__indexation__": ["container"]
                 },
+                getCtnKey: function() {
+                    return this.name + ":" + this.getUid();
+                },
                 checkData: function(){
                     return true;
-                }                
+                },
+                init: function(){
+                    this.contentData = new Kimo.SmartList({});
+                    console.log("init:Strange");
+                },
+                loadContents: function(){
+                    var self = this;
+                    var def = new $.Deferred();
+                    var dataPromise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
+                    {
+                        type: "GET",
+                        data: {
+                            container : this.getCtnKey()
+                        }
+                    });
+                    dataPromise.done(function(response){
+                        console.log("response", response.result);
+                        self.contentData = response.result;
+                        def.resolve(response.result);
+                    }).fail(function(reason){
+                        def.reject(reason);
+                    });
+                    return def.promise();
+                }
             });
         },
         
@@ -180,11 +218,8 @@ define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-t
                             return $(container);
                         },
                         
-                        beforeSubFormRender: function (form, data) {
-                            if (!$.isEmptyObject(data)){
-                                return;
-                            }
-                            var entity = ContentypeManager.createContent("BiblioItem");
+                        beforeSubFormRender: function(form, formData) {
+                            var entity = ContentypeManager.createContent("BiblioItem",formData.data);
                             form.setData(entity);
                         }
                     }
@@ -207,6 +242,15 @@ define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-t
             return listTpl;
         },
         
+        render: function(data, context){
+            var biblioEntity = ContentypeManager.createObjectByJson(data),
+            /*templateChange according to context*/
+            contentHandler = TplMng.render("list-tpl", {
+                dataLoader : $.proxy(biblioEntity.loadContents, biblioEntity)
+            });
+            return contentHandler;
+        },
+        
         getExposedConfig: function() {
             return {
                 title: "Bibliographie",
@@ -217,4 +261,6 @@ define("biblio.type",["ReadList.ContentTypePluginMng","Kimo/core","text!biblio-t
             }
         }
     }); 
+}, function(e){
+    console.log(e);
 });

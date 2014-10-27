@@ -51,8 +51,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.editBtn = $(this.editBoard).find(".edit-btn").eq(0);
         },
         
-        configure: function(){
-            
+        configure: function(){    
             /*create content list*/
             this.contentList = this._createContentList();
             this.contentList.render($(this.dataContainer));
@@ -185,12 +184,19 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 if (typeof contentType !== "string")
                     return emptyFragment;
                 self._initContentType(contentType);
-                var renderer = Mustache.render(self.currentContentType.getContentTemplate(), data);
+                /* contexte */
+                var context = "main";
+                var renderer = Mustache.render(self.currentContentType.getContentTemplate(context), data);
+                /* experimental */
+                if(typeof self.currentContentType.render == "function"){
+                    renderer = self.currentContentType.render(data,context);
+                }
                 renderer = $(renderer).attr("data-contentType", contentType);
                 if (data.hasOwnProperty("uid")) {
                     $(renderer).attr("item-uid", data.uid);
                 }
                 renderer = $(renderer).attr("content-ref", self.currentContentType.getUid());
+                //self._resetContentScroller();
                 return renderer;
             }
 
@@ -294,11 +300,12 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.currentContentType = ContentTypePluginManager.initialize(contentType);
         },
         
+        /* Ajouter un contenu */
         _addNewContent: function(action) {
             var self = this;
             var entity = this.currentForm.getData(); //row data
             action = this.nxtAction || "update";
-            if (typeof entity.save !== "function") {
+            if (typeof entity.save !== "function") { 
                 action = "create";
                 var data = entity.data;
                 entity = ContentTypePluginManager.createContent(data.__entity__);
@@ -402,19 +409,18 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             }
         },
         /**
-         * Fix handleForm
          * Show the edit form for a content
          **/
         _handleForm: function(data) {
             var currentContentConfig = this.currentContentType.getExposedConfig();
             var defaultContent = this.defaultContent.val();
             var form = ContentTypePluginManager.getEditor(currentContentConfig.form);
-            if (typeof data == "object" && ("__entity__" in data)) {
+            if (typeof data == "object" && (data.hasOwnProperty("__entity__"))) {
                 data = ContentTypePluginManager.createObjectByJson(data, this.currentContent);
             } else {
+                /* create empty content*/
                 data = ContentTypePluginManager.createContent(currentContentConfig.entity);
             }
-            /* Work with some other stuff */
             var mainField = (currentContentConfig.hasOwnProperty("mainField") && typeof currentContentConfig.mainField == "string") ? currentContentConfig.mainField : false;
             if (mainField) {
                 if (this.nxtAction != "update") {
@@ -427,7 +433,9 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             }
             /* render form when content is ready */
             var self = this;
-            this.currentContentType.beforeFormRender(form, data).done(function(form, data) {
+            var formRenderPromise = this.currentContentType.beforeFormRender(form, data);
+            if(!formRenderPromise || !formRenderPromise.hasOwnProperty("done")) { throw "beforeFormRender should return a promise"; }
+            formRenderPromise.done(function (form, data) {
                 self.currentForm = form;
                 self.currentForm.setData(data);
                 self.currentForm.on("submit", $.proxy(self.onSubmitForm, self));
@@ -440,8 +448,6 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         
         /* ... dissocier la création d'un contenu du formulaire ... */
         onSubmitForm: function() {
-            alert("inside form submit ... his is it");
-            console.log("this is what I'm telling you");
             this._addNewContent();
         }
         

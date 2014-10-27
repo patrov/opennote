@@ -51,7 +51,6 @@ define(["Kimo/core"], function(Kimo){
                         console.log("config",config.getIndexationInfos());
                     }
                     
-                    console.log("config",config);
                     var entity = Kimo.ModelManager.createEntity(config);
                     _entitiesMap[name] = entity;
                 }
@@ -137,10 +136,10 @@ define(["Kimo/core"], function(Kimo){
                 return _formModal;
             },
             /*handle data*/
-            createContent: function(entityType,data){
+            createContent: function(entityType, data){
                 try{
                     var entity = (data && data.hasOwnProperty("_cid")) ? _entities.get(data._cid) : null;
-                    data = (data) || {};
+                    data = data || {};
                     if(!entity){
                         entity = new _entitiesMap[entityType](data);
                         _entities.set(entity.getCid(),entity);
@@ -172,11 +171,11 @@ define(["Kimo/core"], function(Kimo){
                 return _pluginsConf; 
             },
         
-            createObjectByJson: function(jsonData,mainNode){
+            createObjectByJson: function(jsonData, mainNode){
                 try{
                     var result = this.createContent(jsonData.__entity__, jsonData); //keep reference 
                     var onChange = function(reason){
-                        mainNode.handleContent(result,reason,mainNode.get("__contentType__"),true);
+                        if (mainNode) { mainNode.handleContent(result,reason,mainNode.get("__contentType__"),true); }
                     } 
                     if(typeof mainNode=="object"){
                         result.detach("change",onChange).on("change",onChange);
