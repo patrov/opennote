@@ -1,18 +1,19 @@
 /* prendre le  chargement des contenus  en compte 
  * prendre les liens en compte
  *  */
-define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
+define(["Kimo/core", "OpenNote.models"], function(Kimo, Models) {
     Kimo.ActivityManager.createActivity("EditActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
-            var a = {
+            var viewInfos = {
                 name: "readlist-form-view",
                 title: "Form view",
                 contentEl: $("#edit-book-tpl").html()
             };
-            this.setContentView(a);
+            this.setContentView(viewInfos);
         },
         
+        // switch to directive
         events: {
             ".nv-btn.show-form click": "showEditForm",
             ".nv-btn.show-list click": "openMyCard",
@@ -20,14 +21,14 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
             ".refTypeField change": "handleRefType"
         },
         
-        /* must have a reference to application */
+        /* must have a reference to the current application */
         onCreate: function(params) {
             this.repository = Models.bookRepository;
-            this.documentForm = ReadList.forms.bookForm;
+            this.documentForm = OpenNote.forms.bookForm;
             this.bindEvents();
         },
         
-        onStop: function(){
+        onStop: function() {
             
         },
         
@@ -35,31 +36,35 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
            
         },
         
-        populateFromExportAction : function(){},
+        populateFromExportAction : function() {},
         
-        createAction: function(linkParam,appParam){
+        createAction: function(linkParam, appParam){
             var data = (appParam && appParam.data ) ? appParam.data.volumeInfo : false;
-            console.log(data);
-            if($.isPlainObject(data)){
+            
+            if ($.isPlainObject(data)) {
                 data.pages = data.pageCount;
                 data.author = data.authors;
                 data.tags = data.categories.join(",");
             }
-            console.log("data",data);
-            try{
+           
+            try {
                 var documentItem =  new Models.DocumentItem(data);
                 this._renderForm(documentItem);
-            }catch(e){
+            } catch(e) {
                 console.log("error while created document");
             }
         },
+
         /**** Actions check if user has the right to edit a document ****/
-        editAction: function(contentId,content){
+        // use décorator that will be called before the action
+        editAction: function(contentId, content) {
             var self = this;
             try{
-                if(contentId){
+                if (contentId) {
+                    this.currentContentId = contentId
                     var dataPromise = this.repository.findById(contentId);
-                    dataPromise.done(function(documentItem){
+                    dataPromise.done(function(documentItem) {
+                        console.log("caliente:::", documentItem)
                         self._renderForm(documentItem); 
                     });
                 }
@@ -69,42 +74,45 @@ define(["Kimo/core", "ReadList.models"], function(Kimo, Models) {
         },
         
         _renderForm: function(entity) {
-            this.documentForm.setData(entity);
+            //we set only the fields that are editable
+            this.documentForm.setData(entity.getFields());
             this.documentForm.setValidator(function(formData) {
                 var hasError = 0;
                 for (var key in formData) {
                     var value = formData[key];
                     if ($.trim(value) === "") {
-                        hasError++;
+                        hasError ++;
                     }
-                    if(key=="subtitle" && hasError > 0){
-                        hasError--;
+                    if(key == "subtitle" && hasError > 0) {
+                        hasError --;
                     }
                 }
                 return !hasError;
             });
-            this.repository = ReadList.models.bookRepository;
             var container = $('<div class="documentItem Container" />');
             this.documentForm.render(container);
             $(this.view.view).find("#form-ctn").html($(container));
         },
+
         bindEvents: function() {
             var self = this;
             var promise;
             this.documentForm.on("submit", function(event) {
-                var toReadItem = event.data.entity;
-                //fix why isNew
-                if (typeof toReadItem.isNew != "function") {
-                    toReadItem = new Models.DocumentItem(toReadItem.data);
+                var mainDocumentItem = event.data.entity;
+
+                // fix why isNew
+                if (typeof mainDocumentItem.isNew != "function") {
+                    //strange but we have to handle the id
+                    mainDocumentItem.id = self.currentContentId 
+                    mainDocumentItem = new Models.DocumentItem({ fields: mainDocumentItem });
                 }
-                if (toReadItem.isNew()) {
-                    promise = self.repository.add(toReadItem, true);
-                    console.log("promise:add", promise);
+                if (mainDocumentItem.isNew()) {
+                    promise = self.repository.add(mainDocumentItem, true);
                 } else {
                     /* update here ---> but it should be done automagically */
-                    toReadItem.set(event.data.rawData);
-                    promise = self.repository.update(toReadItem);
-                    console.log("promise:update", promise);
+                    console.log("icic:: update case")
+                    mainDocumentItem.set('fields', event.data.rawData);
+                    promise = self.repository.update(mainDocumentItem);
                 }
                 
                 promise.done(function() {

@@ -1,38 +1,33 @@
-var ReadList = ReadList || {};
+var OpenNote = OpenNote || {};
+
 Kimo.require.config({
     paths:{
-        "ReadList.route": "apps/readlist/routes",
-        "ReadList.forms": "apps/readlist/forms",
-        "ReadList.models": "apps/readlist/models",
-        "ReadList.ContentTypePluginMng": "apps/readlist/components/ContentTypeManager",
-        "ReadList.ContentTypes": "apps/readlist/contenttypes/contenttype",
-        "ReadList.params.activity": "apps/readlist/activities/params.activity",
-        "ReadList.home.activity":"apps/readlist/activities/home.activity",
-        "ReadList.edit.activity": "apps/readlist/activities/edit.activity",
-        "ReadList.exporter.activity": "apps/readlist/activities/exporter.activity",
-        "ReadList.docimporter.activity": "apps/readlist/activities/docimporter.activity",
-        "ReadList.contentedition.activity": "apps/readlist/activities/contentedition.activity",
-        "ReadList.searchengine.activity": "apps/readlist/activities/searchengine.activity",
-        "ReadList.user.activity": "apps/readlist/activities/user.activity",
-        "ReadList.admin.activity": "apps/readlist/activities/admin.activity",
-        "ReadList.TemplateManager": "apps/readlist/components/TemplateManager"
+        "OpenNote.route": "apps/opennote/routes",
+        "OpenNote.forms": "apps/opennote/forms",
+        "OpenNote.models": "apps/opennote/models",
+        "OpenNote.ContentTypePluginMng": "apps/opennote/components/ContentTypeManager",
+        "OpenNote.ContentTypes": "apps/opennote/contenttypes/contenttype",
+        "OpenNote.TemplateManager": "apps/opennote/components/TemplateManager"
     }
 });
 
-define("ReadList",
-    ["Kimo/core","ReadList.route","ReadList.forms","ReadList.models","ReadList.ContentTypes",
-    "ReadList.params.activity","ReadList.home.activity","ReadList.edit.activity","ReadList.exporter.activity",
-    "ReadList.docimporter.activity", "ReadList.TemplateManager", "ReadList.contentedition.activity","ReadList.searchengine.activity","ReadList.user.activity"
+define("OpenNote",
+    [
+        "Kimo/core",
+        "OpenNote.route",
+        "OpenNote.forms",
+        "OpenNote.models",
+        "OpenNote.ContentTypes",
+        "OpenNote.TemplateManager"
     ], function(Kimo) {
-        
-        Kimo.ApplicationManager.create("ReadList", {
+        Kimo.ApplicationManager.create("OpenNote", {
             _settings: {
-                mainViewContainer: "#readList",
+                mainViewContainer: "#app-opennote-wrapper",
                 mainActivity: "HomeActivity",
                 route: "home:home",
                 viewSettings: {
-                    id: "readlist-app",
-                    cls: "readlist",
+                    id: "opennote-app",
+                    cls: "opennote",
                     draggable: false,
                     resizable: true,
                     size: {
@@ -44,18 +39,20 @@ define("ReadList",
             },
             
             onStart: function() {
-                
+                $(".mainWrapper").css({ border: "1px solid red" })
                 $(".mainWrapper").on("click", "#searhBtn", function(e) {
                     var searchValue = $("#searhField").val();
                     var container = $("#searchFieldWrapper");
-                    Kimo.ActivityManager.invoke("ReadList:SearchEngineActivity", {
+                   /* Kimo.ActivityManager.invoke("OpenNote:SearchEngineActivity", {
                         method: "showSearchResult", 
                         params: [searchValue, container]
-                    });
+                    });*/
                 });
-                Kimo.Utils.makeRestRequest(appPath+"webservices/members/current").done(function(response){
+
+               /* Kimo.Utils.makeRestRequest(appPath+"webservices/members/current").done(function(response){
                     $(".current-user").text(response.result.completeName);
-                });
+                });*/
+
                 Kimo.ModelManager.useAdapter(Kimo.AdapterRegistry.get("restAdapter"));
             },
             
@@ -75,5 +72,5 @@ define("ReadList",
         });
 
     },function(e){
-        console.log("error",e);
+        console.log("error", e);
     });

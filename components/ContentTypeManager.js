@@ -235,25 +235,27 @@ define(["Kimo/core"], function(Kimo){
             initPlugins: function(){
                 var def = new $.Deferred(); 
                 $.ajax({
-                    url: appPath+"js/apps/readlist/contenttypes/config.json",
+                    url: appPath+"js/apps/opennote/contenttypes/config.json",
                     dataType:"json"
-                }).done(function(response){
+                }).done(function(response) {
                     var pluginPath = response.path;
                     var plugins = [];
                     var pluginsName = [];
-                    $.each(response.plugins,function(i,name){
+                    $.each(response.plugins, function(i,name) {
                         var completePath = appPath+pluginPath+"/"+name+"/main.js";
-                        plugins.push(completePath);   
-                        pluginsName.push(name+".type");
+                        //plugins.push(completePath);   
+                        //pluginsName.push(name+".type");
                     });
                     if(!plugins.length){
                         def.resolve();
                     }else{
-                        Kimo.Utils.requireWithPromise(plugins).done(function(response){
+                        Kimo.Utils.requireWithPromise(plugins).done(function(response)  {
                             Kimo.Utils.requireWithPromise(pluginsName).done(function(t){
                                 /* all plugins are loaded */
                                 def.resolve();
                             });
+                        }).fail(function(){
+                            console.log("idfdf")
                         }); 
                     }
                     

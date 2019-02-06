@@ -1,4 +1,4 @@
-define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypePluginManager) {
+define(["Kimo/core","OpenNote.ContentTypePluginMng"], function(Kimo,ContentTypePluginManager) {
     
   ContentTypePluginManager.registerContentType("NoteType", {
         _settings: {},

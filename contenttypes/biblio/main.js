@@ -5,11 +5,11 @@
 
 Kimo.require.config({
     paths:{
-        "biblio-tpl": "apps/readlist/contenttypes/biblio/templates/biblio.tpl",
-        "list-tpl": "apps/readlist/contenttypes/biblio/templates/list.tpl"
+        "biblio-tpl": "apps/opennote/contenttypes/biblio/templates/biblio.tpl",
+        "list-tpl": "apps/opennote/contenttypes/biblio/templates/list.tpl"
     }
 });
-define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!biblio-tpl", "ReadList.TemplateManager"], function(ContentypeManager, Kimo, BiblioTpl, TplMng){
+define("biblio.type", ["OpenNote.ContentTypePluginMng", "Kimo/core", "text!biblio-tpl", "OpenNote.TemplateManager"], function(ContentypeManager, Kimo, BiblioTpl, TplMng){
     
     var biblioTpl = $(BiblioTpl);
     $("body").append(biblioTpl);

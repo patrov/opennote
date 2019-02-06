@@ -1,8 +1,8 @@
 
-define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
+define(["Kimo/core", "OpenNote.models", "OpenNote.forms", "OpenNote.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
 
     Kimo.ActivityManager.createActivity("ExportActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         exportList : new Kimo.SmartList({
             idKey: "uid",
             onInit: function() {

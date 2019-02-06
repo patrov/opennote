@@ -1,13 +1,13 @@
-define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
+define(["Kimo/core", "vendor.handlebars", "OpenNote.models", "OpenNote.forms", "OpenNote.ContentTypePluginMng"], function(Kimo, Handlebars, M, F, ContentTypePluginManager) {
    
     var ActivityManager = Kimo.ActivityManager;
     Kimo.ActivityManager.createActivity("ContentEditionActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
             var a = {
                 name: "editcontent-board-view",
                 title: "Main content board",
-                contentEl: $($("#data-wrapper").html())
+                contentEl: document.createElement('div')
             }
             this.setContentView(a);
         },
@@ -29,15 +29,17 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         
         onCreate: function(params) {
             this.dataContainer = $(this.view.view).find(".data-view-ctn").eq(0);
-            this.repository  = ReadList.models.bookRepository;
-            ContentTypePluginManager.initPlugins().done($.proxy(this.initContentTypes,this));  
-            this.configure();
+            this.repository  = OpenNote.models.bookRepository;
+            //ContentTypePluginManager.initPlugins().done($.proxy(this.initContentTypes,this));  
+            //this.configure();
         },
         
         initContentTypes: function(){
             var tplParams = ContentTypePluginManager.getAvailableContentConf();
-            var editBoard = Mustache.render($("#edit-board-tpl").html(), tplParams);
-            $(this.view.view).find(".edit-zone").append(editBoard);
+            var template = Handlebars.compile($("#edit-board-tpl").html())
+            var editBoard = template(tplParams)
+            console.log(this.view.view.get(0).innerHTML)
+            $(this.view.view).find(".edit-zone").append($(editBoard));
             this.editSection = $(this.view.view).find(".edit-zone").eq(0);
             this.contentSection = $(this.view.view).find(".data-container").eq(0);
             this.editBoard = $(this.view.view).find("#board-wrapper").eq(0);
@@ -49,6 +51,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.formAction = $($("#formBtn-tpl").html()).clone();
             this.contentItem = $($("#content-tpl").html()).clone();
             this.editBtn = $(this.editBoard).find(".edit-btn").eq(0);
+            
         },
         
         configure: function(){    
@@ -63,18 +66,24 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         /** Afficher le board */
-        showBoardAction : function(routeId,selectedContent){
+        showBoardAction : function(routeId, selectedContent) {
             var self = this;
-            if(routeId){
-                var dataPromise = ReadList.models.bookRepository.findById(routeId);
-                dataPromise.done(function(entity){
-                    self._handleContentChanged(entity);
-                });
-                return;
-            }
-            if(selectedContent){
-                this._handleContentChanged(selectedContent);
-            }
+            this.on("viewReady", function(render) {
+                if(routeId) {
+                    var dataPromise = OpenNote.models.bookRepository.findById(routeId);
+                    dataPromise.done(function(entity) {
+                        self.configure();
+                        self.initContentTypes()
+                        self._handleContentChanged(entity);
+                    });
+                    return;
+                }
+                console.log("selectedContent", selectedContent)
+                if (selectedContent) {
+                    this._handleContentChanged(selectedContent);
+                }
+            })
+            
         },
         
         _handleContentChanged: function(currentContent) {
@@ -95,6 +104,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         _populateDataView: function() {
             var self = this;
             var promise = this.currentContent.loadContents();
+            console.log("", self.contentList)
             self.contentList.showLoadingMsg();
             promise.done(function(response) {
                 self.contentList.setData(self.currentContent.getContents(), true);
@@ -165,7 +175,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             });
         },
         showSimilarContents: function(content, e) {
-            ActivityManager.invoke("ReadList:SearchEngineActivity", {
+            ActivityManager.invoke("OpenNote:SearchEngineActivity", {
                 method: "getSimilarContents",
                 params: [content, $.proxy(this.onSimilarResult, this)]
             });
@@ -186,10 +196,11 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 self._initContentType(contentType);
                 /* contexte */
                 var context = "main";
-                var renderer = Mustache.render(self.currentContentType.getContentTemplate(context), data);
+                var template = Handlebars.compile(self.currentContentType.getContentTemplate(context))
+                var renderer = template(data);
                 /* experimental */
-                if(typeof self.currentContentType.render == "function"){
-                    renderer = self.currentContentType.render(data,context);
+                if(typeof self.currentContentType.render == "function") {
+                    renderer = self.currentContentType.render(data, context);
                 }
                 renderer = $(renderer).attr("data-contentType", contentType);
                 if (data.hasOwnProperty("uid")) {
@@ -291,7 +302,8 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             return dataList;
         },
         _renderCurrentDocument: function() {
-            var render = Mustache.render($("#content-book-tpl").html(), this.currentContent.toJson(true));
+            var template = Handlebars.compile($("#content-book-tpl").html())
+            var render = template(this.currentContent.toJson(true));
             $(this.view.view).find(".header").html(render);
         },
         
@@ -344,7 +356,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         /*Explore state content that can save boolean properties*/
         handleContentSelection: function(content,htmlContent) {
-            ActivityManager.invoke("ReadList:ExportActivity", {
+            ActivityManager.invoke("OpenNote:ExportActivity", {
                 method: "handleContentSelection",
                 params: [content,htmlContent]
             });

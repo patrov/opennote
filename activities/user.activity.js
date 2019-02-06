@@ -1,6 +1,6 @@
 define(["Kimo/core"], function(Kimo) {
     Kimo.ActivityManager.createActivity("UserActivity", {
-        appname:"ReadList",
+        appname:"OpenNote",
         initView: function() {
             var rootView = {
                 name: "readlist-user-view",

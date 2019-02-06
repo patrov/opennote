@@ -1,6 +1,6 @@
 
-define(["Kimo.NavigationManager"],function(NvgManager){
-    NvgManager.registerRoutes("ReadList", { 
+define(["Kimo.NavigationManager"],function(NvgManager) {
+    NvgManager.registerRoutes("OpenNote", { 
     
         "home:home": {
             url:"#/home",
@@ -29,7 +29,8 @@ define(["Kimo.NavigationManager"],function(NvgManager){
         
         "content:create":{
             url :"#/content/create",
-            action: "EditActivity:create"
+            action: "EditActivity:create",
+            templateName: "edit"
         },
         
         "content:import": {

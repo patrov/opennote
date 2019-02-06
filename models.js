@@ -1,39 +1,35 @@
-var ReadList = ReadList || {};
+var OpenNote = OpenNote || {};
 define(["Kimo/core"], function(Kimo) {
     var ModelManager = require("Kimo.ModelManager");
-    ReadList.models = (function() {
+    OpenNote.models = (function() {
 
         var documentEntity = ModelManager.createEntity({
             name: "Book",
-            /*definition: { useful for server side verifications
-             title:  "text",//int:datatime:timestamp:collection
-             author: "text",
-             note:"text",
-             type: "int",
-             source: "text" //handle jointure :helper            
-             },*/
-            constraint: {
-                title: ["int", "notempty"]
-            },
+            _idKey: 'id',
             defaults: {
-                title: "",
-                subtitle: "",
-                author: "",
-                publisher: "",
-                place: "",
-                year: "",
-                pages: "",
-                contents: [],
-                tags: "",
-                cover: null,//path
-                extra: {},
-                "__indexation__" : ["title","subtitle","author:cs","pages","publisher","place","year","tags:csv"]
+                fields: {
+                    "__entity__": "Book",
+                    title: "",
+                    subtitle: "",
+                    authors: "",
+                    publisher: "",
+                    place: "",
+                    year: "",
+                    pages: "",
+                    contents: [],
+                    tags: "",
+                    cover: null,
+                    extra: {}    
+                },
+
+                indexation: {},
+                metadata: {}
+                
             },
             
             lastEditedContent: null,
             lastContentsAction: null,
             init: function() {
-                this.set("")
                 this.isReady = false;
                 /* load paginate */
                 this._cidUidMap = {};
@@ -46,8 +42,8 @@ define(["Kimo/core"], function(Kimo) {
                 });
             },
             
-            getPath: function(){
-                return "/cnamOpennote/webservices/books";
+            getPath: function() {
+                return "/api/contents";
             },
             
             onContainerInit: function(data) {
@@ -106,10 +102,10 @@ define(["Kimo/core"], function(Kimo) {
                 this.set("contents", contents);//notifie the data list
             },
             
-            toJson: function(){
+            toJson: function() {
                 var json = this.super().toJson();//add more method there
                 /*handle all dynfields here*/
-                var author = this.getAuthor();
+                var author = this.getFields().author;
                 if(Kimo.jquery.isPlainObject(author)){
                     var results = [];
                     Kimo.jquery.each(author,function(key,author){
@@ -137,18 +133,23 @@ define(["Kimo/core"], function(Kimo) {
                 this._cidUidMap[content.uid] = content.getCid();
                 return contentJson;
             },
+
             createContent: function(content, silent) {
                 this.contentList.set(content["_cid"], content, silent);
             },
+
             updateContent: function(content, silent) {
                 this.contentList.set(content["_cid"], content, silent);
             },
+
             deleteContent: function(content, silent) {
                 this.contentList.deleteItem(content, silent);
             },
+
             getContentByCid: function(cid) {
                 return this.contentList.get(cid);
             },
+
             getContentByUid: function() {
 
             },
@@ -166,17 +167,18 @@ define(["Kimo/core"], function(Kimo) {
         });
 
         var BookRepository = ModelManager.createRepository({
-            repositoryName: "BookRepository", //modifier chan
-            route: "",
+            repositoryName: "BookRepository",
             model: documentEntity, //user string or prefix
-            getPath: function(){
-                return "/cnamOpennote/webservices/contents";
+            getPath: function(action) {
+                // clear everything rest adapter
+                if (action === 'find') {
+                    return "/api/content";
+                }
+                return "/api/contents/";
             }
         })
 
         BookRepository = new BookRepository;
-
-        /* SubContent Data */
 
         /*public Api*/
         return {
@@ -184,5 +186,5 @@ define(["Kimo/core"], function(Kimo) {
             bookRepository: BookRepository
         }
     })();
-    return ReadList.models;
+    return OpenNote.models;
 });

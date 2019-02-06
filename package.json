@@ -1,0 +1,28 @@
+{
+  "name": "opennote",
+  "version": "0.9.0",
+  "description": "keep tracks of your reading",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrov/opennote.git"
+  },
+  "keywords": [
+    "aqm",
+    "opennote"
+  ],
+  "author": "hbaptiste",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patrov/opennote/issues"
+  },
+  "homepage": "https://github.com/patrov/opennote#readme",
+  
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0"
+  }
+}

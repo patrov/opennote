@@ -1,6 +1,7 @@
 {
     "name": "Administrateur",
-    "path": "js/apps/readlist/contenttypes",
+    "path": "js/apps/opennote/contenttypes",
+    "name": "Radical",
     "disabled": [],
     "plugins" : ["biblio"]   
 }

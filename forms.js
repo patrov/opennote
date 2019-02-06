@@ -1,7 +1,7 @@
-var ReadList = ReadList || {};
-define("ReadList.forms", ["Kimo.FormManager"], function(FormManager) {
-    return;
-    ReadList.forms = (function() {
+var OpenNote = OpenNote || {};
+define("OpenNote.forms", ["Kimo.FormManager"], function(FormManager) {
+    
+    OpenNote.forms = (function() {
         var typeList = {
             "book": "Livre",
             "article": "Article"
@@ -76,7 +76,7 @@ define("ReadList.forms", ["Kimo.FormManager"], function(FormManager) {
                 type: "text",
                 placeholder: " sous-titre du document"
             },
-            author: {
+            authors: {
                 label: "Auteur",
                 type: "text",
                 placeholder: "Auteur du document",
@@ -119,7 +119,7 @@ define("ReadList.forms", ["Kimo.FormManager"], function(FormManager) {
 
     
 
-  /*  var booklistForm = FormManager.createForm("ReadList", {
+  /*  var booklistForm = FormManager.createForm("OpenNote", {
         data: {},
         map: {
             start: {

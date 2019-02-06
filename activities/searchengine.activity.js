@@ -1,6 +1,6 @@
 define(["Kimo/core"], function(Kimo) {
     Kimo.ActivityManager.createActivity("SearchEngineActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
             var a = {
                 name: "readlist-step-view",

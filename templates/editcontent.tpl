@@ -3,8 +3,8 @@
 <script id="data-wrapper" type="text/html">
     <div id="mainboard-form-view" class="container-fluid">
         <div class="row-fluid">
-            <div class="span5 edit-zone"></div>
-            <div class="span7 data-container">
+            <div class="col-md-5 edit-zone"></div>
+            <div class="col-md-7 data-container">
                 <div class="header"></div>
                 <div class="data-view-ctn"></div>
             </div>

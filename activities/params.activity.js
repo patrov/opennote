@@ -1,6 +1,6 @@
 define(["Kimo/core"], function(Kimo) {
     Kimo.ActivityManager.createActivity("ParamsActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
             return {
                 name: ""

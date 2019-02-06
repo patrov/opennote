@@ -1,7 +1,7 @@
-define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypePluginManager) {
-        
+define(["Kimo/core", "vendor.handlebars", "OpenNote.ContentTypePluginMng"], function(Kimo, Handlebars, ContentTypePluginManager) {
+    
     Kimo.ActivityManager.createActivity("HomeActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
             var view = $("<div id='edit'></div>").clone()
             var a = {
@@ -13,8 +13,9 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             //$(template).appendTo("body"); //clean html see http://bugs.jquery.com/ticket/13223
             this.setContentView(a);
         },
+
         onCreate: function(params) {
-            this.repository = ReadList.models.bookRepository;
+            this.repository = OpenNote.models.bookRepository;
             this.listPromise = this._createDataList();
         },
             
@@ -48,20 +49,25 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
         /* Controller Actions */
         showHomeAction: function(params) {
             var self = this;
-            this.listPromise.done(function(response){
-                self.listView.reset();
-                var frag = document.createDocumentFragment();
-                var content = $("<div id='list'/>");
-                self.listView.render(content);
-                frag.appendChild($(content).get(0));
-                self.view.setContent($(frag));
-            }).fail(function(t){
-                console.log("error in showHomeAction");
-            });  
+
+             this.on("viewReady", function(render) {
+
+                this.listPromise.done(function(response) {
+                    self.listView.reset();
+                    var frag = document.createDocumentFragment();
+                    var content = $("<div id='list'/>");
+                    self.listView.render(content);
+                    frag.appendChild($(content).get(0));
+                    self.view.setContent($(frag));
+
+                }).fail(function(t) {
+                    console.log("error in showHomeAction");
+                });  
+        });
         },
         
         handleContentSelection: function(content, htmlContent) {
-            Kimo.ActivityManager.invoke("ReadList:ExportActivity", {
+            Kimo.ActivityManager.invoke("OpenNote:ExportActivity", {
                 method: "handleContentSelection",
                 params: [content, htmlContent]
             });
@@ -75,8 +81,11 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
         _createOrEditDocument: function() {
             var selectedDocument = this.listView.selected;
             selectedDocument = this.listView.getDataByHtml(selectedDocument);
+            
+            // add content to parameter bag here
+
             this.navigateTo("content:edit", {}, {
-                "{id}": selectedDocument.uid
+                "{id}": selectedDocument.id
             });
         },
         _createNewDocument: function() {
@@ -90,8 +99,7 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             selectedDocument = this.repository.findByCid($(selectedDocument).attr("id"));
             if (!selectedDocument)
                 return;
-            console.log("ici");
-            console.log("selected",selectedDocument);
+            console.log("selectedDocument:::", selectedDocument)
             ContentTypePluginManager.setMainContent(selectedDocument);
             this.navigateTo("contentboard:show", {
                 selectedDocument: selectedDocument
@@ -108,19 +116,24 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             }
         },
         
-        _handleDataList: function(def,data){
+        _handleDataList: function(def, data) {
+            console.log("data::", data)
             var self = this;
-            var allData = [];
-            
+            var allData = []
+            var templateItem = '<div id="{{_cid}}" data-uid="{{_cid}}" class="item"><h3 class="title" data-field-name=""><i class="fa fa-file-text-o fa-1x"></i> {{fields.title}}</h3><span class="author">{{fields.author}}</span><span>, {{fields.publisher}} <em>{{fields.place}}</em> {{fields.year}}</span></div>';
+            var bookTemplate = Handlebars.compile(templateItem)
             data.forEach(function(data, key) {
-                var dataItem = data.toJson(true);
-                dataItem["_cid"] = data.getCid();
-                allData.push(dataItem);
+                if (typeof data.toJson === "function") {
+                    var dataItem = data.toJson(true);
+                    dataItem["_cid"] = data.getCid();
+                    allData.push(dataItem);    
+                } else {
+                 allData.push(data)
+                }
             });
-
+            
             var itemRender = function(entity) {
-                var templateItem = '<div id="{{_cid}}" data-uid="{{_cid}}" class="item"><h3 class="title" data-field-name=""><i class="fa fa-file-text-o fa-1x"></i> {{title}}</h3><span class="author">{{author}}</span><span>, {{publisher}} <em>{{place}}</em> {{year}}</span></div>';
-                return Mustache.render(templateItem, entity);
+                return bookTemplate(entity);
             }
             
             this.listView = new Kimo.DataView({
@@ -165,10 +178,14 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
         
         _createDataList: function() {
             var def = new $.Deferred();
-            this.repository.getAll({
+           
+           this.repository.getAll({
                 start: 0,
                 limit: 10
-            }).done($.proxy(this._handleDataList,this,def));
+            }).done((data)=> {
+                this._handleDataList(def, data)
+            });
+
             return def.promise();
         },
         
@@ -177,5 +194,5 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             this.navigateTo("content:import", {});//fix last route
         }
     });
-  
+      
 })

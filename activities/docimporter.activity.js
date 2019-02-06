@@ -5,10 +5,10 @@
  */
 
 
-define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
+define(["Kimo/core", "OpenNote.models", "OpenNote.forms", "OpenNote.ContentTypePluginMng"], function(Kimo, M, F, ContentTypePluginManager) {
 
     Kimo.ActivityManager.createActivity("DocumentImportActivity", {
-        appname: "ReadList",
+        appname: "OpenNote",
         initView: function() {
             var a = {
                 name: "readlist-docimport-view",
@@ -20,7 +20,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         
         onCreate: function(){
             /* getParameters */
-            this.importForm = ReadList.forms.bookImportForm;
+            this.importForm = OpenNote.forms.bookImportForm;
         },
         
         showFormAction: function(){
