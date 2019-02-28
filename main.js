@@ -6,27 +6,17 @@ Kimo.require.config({
         "ReadList.models": "apps/readlist/models",
         "ReadList.ContentTypePluginMng": "apps/readlist/components/ContentTypeManager",
         "ReadList.ContentTypes": "apps/readlist/contenttypes/contenttype",
-        "ReadList.params.activity": "apps/readlist/activities/params.activity",
-        "ReadList.home.activity":"apps/readlist/activities/home.activity",
-        "ReadList.edit.activity": "apps/readlist/activities/edit.activity",
-        "ReadList.exporter.activity": "apps/readlist/activities/exporter.activity",
-        "ReadList.docimporter.activity": "apps/readlist/activities/docimporter.activity",
-        "ReadList.contentedition.activity": "apps/readlist/activities/contentedition.activity",
-        "ReadList.searchengine.activity": "apps/readlist/activities/searchengine.activity",
-        "ReadList.user.activity": "apps/readlist/activities/user.activity",
-        "ReadList.admin.activity": "apps/readlist/activities/admin.activity",
         "ReadList.TemplateManager": "apps/readlist/components/TemplateManager"
     }
 });
 
 define("ReadList",
     ["Kimo/core","ReadList.route","ReadList.forms","ReadList.models","ReadList.ContentTypes",
-    "ReadList.params.activity","ReadList.home.activity","ReadList.edit.activity","ReadList.exporter.activity",
-    "ReadList.docimporter.activity", "ReadList.TemplateManager", "ReadList.contentedition.activity","ReadList.searchengine.activity","ReadList.user.activity"
+    "ReadList.TemplateManager",
     ], function(Kimo) {
-        
         Kimo.ApplicationManager.create("ReadList", {
             _settings: {
+                alias: "readlist",
                 mainViewContainer: "#readList",
                 mainActivity: "HomeActivity",
                 route: "home:home",
