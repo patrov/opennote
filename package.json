@@ -1,0 +1,36 @@
+{
+  "name": "opennote",
+  "version": "1.0.0",
+  "description": "read and recall",
+  "main": "index.js",
+  "scripts": {
+    "test": "./test.js",
+    "dev": "node index.js",
+    "install": "bower install ./kimonic"
+  },
+  
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrov/opennote.git"
+  },
+  
+  "keywords": [
+    "opennote",
+    "digital",
+    "studies",
+    "annotation"
+  ],
+  
+  "author": "hbaptiste",
+  "license": "ISC",
+  
+  "bugs": {
+    "url": "https://github.com/patrov/opennote/issues"
+  },
+  
+  "homepage": "https://github.com/patrov/opennote#readme",
+
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
