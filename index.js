@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-
+const path = require("path")
 /* app.use('/static', express.static(path.join(__dirname, 'public'))) */
 //__filename
 //__dirname
@@ -14,7 +14,8 @@ app.use(express.static('/static'))
 
 // error handler
 app.get('/home', (req, res) => {
-	res.send("<p>Radical ---> blaze!</p>")
+	res.sendFile(path.join(__dirname, "public", "home"))
 })
+
 /* start the server */
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

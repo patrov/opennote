@@ -44,7 +44,7 @@ define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!bibli
                 subEntity.set("container", entity.getCtnKey());
                 subContents.push(subEntity.toJson());
             });
-            /* Save biblioItem here */
+            /* user Service */
             Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
             {
                 type: "POST",

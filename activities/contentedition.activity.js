@@ -7,7 +7,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             var a = {
                 name: "editcontent-board-view",
                 title: "Main content board",
-                contentEl: $($("#data-wrapper").html())
+                contentEl: $($("#data-wrapper").html()) // --> simplifier la vue
             }
             this.setContentView(a);
         },
@@ -28,16 +28,17 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         onCreate: function(params) {
-            this.dataContainer = $(this.view.view).find(".data-view-ctn").eq(0);
             this.repository  = ReadList.models.bookRepository;
+            this.dataContainer = $(this.view.view).find(".data-view-ctn").eq(0);
             ContentTypePluginManager.initPlugins().done($.proxy(this.initContentTypes,this));  
             this.configure();
         },
         
-        initContentTypes: function(){
+        initContentTypes: function() {
             var tplParams = ContentTypePluginManager.getAvailableContentConf();
             var editBoard = Mustache.render($("#edit-board-tpl").html(), tplParams);
             $(this.view.view).find(".edit-zone").append(editBoard);
+            console.log("radical --> ", editBoard)
             this.editSection = $(this.view.view).find(".edit-zone").eq(0);
             this.contentSection = $(this.view.view).find(".data-container").eq(0);
             this.editBoard = $(this.view.view).find("#board-wrapper").eq(0);
@@ -51,7 +52,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.editBtn = $(this.editBoard).find(".edit-btn").eq(0);
         },
         
-        configure: function(){    
+        configure: function() {    
             /*create content list*/
             this.contentList = this._createContentList();
             this.contentList.render($(this.dataContainer));
@@ -159,7 +160,6 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             $(this.contentSection).find(".nano").nanoScroller({
                 alwaysVisible: true
             });
-
             $("#contents-form-container").nanoScroller({
                 alwaysVisible: false
             });
@@ -414,11 +414,12 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         _handleForm: function(data) {
             var currentContentConfig = this.currentContentType.getExposedConfig();
             var defaultContent = this.defaultContent.val();
+
             var form = ContentTypePluginManager.getEditor(currentContentConfig.form);
             if (typeof data == "object" && (data.hasOwnProperty("__entity__"))) {
                 data = ContentTypePluginManager.createObjectByJson(data, this.currentContent);
             } else {
-                /* create empty content*/
+                /* create empty content */
                 data = ContentTypePluginManager.createContent(currentContentConfig.entity);
             }
             var mainField = (currentContentConfig.hasOwnProperty("mainField") && typeof currentContentConfig.mainField == "string") ? currentContentConfig.mainField : false;
@@ -435,7 +436,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             var self = this;
             var formRenderPromise = this.currentContentType.beforeFormRender(form, data);
             if(!formRenderPromise || !formRenderPromise.hasOwnProperty("done")) { throw "beforeFormRender should return a promise"; }
-            formRenderPromise.done(function (form, data) {
+            formRenderPromise.done((form, data) => {
                 self.currentForm = form;
                 self.currentForm.setData(data);
                 self.currentForm.on("submit", $.proxy(self.onSubmitForm, self));
@@ -443,6 +444,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 self._resizeBoard("edit");
                 form.render(self.formContainer);
                 $(self.formContainer).append(self.formAction);
+                this._initScroller()
             });
         },
         

@@ -1,6 +1,6 @@
 var ReadList = ReadList || {};
 Kimo.require.config({
-    paths:{
+    paths: {
         "ReadList.route": "apps/readlist/routes",
         "ReadList.forms": "apps/readlist/forms",
         "ReadList.models": "apps/readlist/models",
@@ -16,7 +16,7 @@ define("ReadList",
     ], function(Kimo) {
         Kimo.ApplicationManager.create("ReadList", {
             _settings: {
-                alias: "readlist",
+                applicationPath: "apps/readlist",
                 mainViewContainer: "#readList",
                 mainActivity: "HomeActivity",
                 route: "home:home",
@@ -27,7 +27,7 @@ define("ReadList",
                     resizable: true,
                     size: {
                         width: "1024px",
-                        height: "750px",
+                        height: "1024px",
                         responsive: true
                     }
                 }
@@ -38,14 +38,17 @@ define("ReadList",
                 $(".mainWrapper").on("click", "#searhBtn", function(e) {
                     var searchValue = $("#searhField").val();
                     var container = $("#searchFieldWrapper");
+                    // calling service
                     Kimo.ActivityManager.invoke("ReadList:SearchEngineActivity", {
                         method: "showSearchResult", 
                         params: [searchValue, container]
                     });
                 });
+
                 Kimo.Utils.makeRestRequest(appPath+"webservices/members/current").done(function(response){
                     $(".current-user").text(response.result.completeName);
                 });
+
                 Kimo.ModelManager.useAdapter(Kimo.AdapterRegistry.get("restAdapter"));
             },
             

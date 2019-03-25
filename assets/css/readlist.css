@@ -4,3 +4,5 @@
 #readlist-app #List .medium{border-left:4px solid #7f8c8d}
 #readlist-app #List .low{border-left: 4px solid #bdc3c7}
 #readlist-app #List .author {font-weight: bold}
+#readlist-app { background: white }
+#contents-form-container { height: 500px } 

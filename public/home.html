@@ -41,18 +41,15 @@
             require(["kimo.core","readlist.app"], function(s, Core) {
                
                 require(["ReadList"], (Readlist) => {
-                    $.ajax({
-                        dataType: "html",
-                        url: "/js/apps/readlist/templates/editcontent.tpl",
-                    }).done((response) => {
-                        $(response).appendTo("body");
-                        Kimo.ApplicationManager.start("ReadList")
-                    })
+                    console.log("radical blaze-->")
+                    console.log(Readlist)
+                    Kimo.ApplicationManager.start("ReadList")
+
+                }, (reason) => {
+                    console.log("=== Error ===")
+                    console.log(reason)
                 })
-            },(reason) => { 
-                console.log("=== Error ===")
-                console.log(reason)
-            })
+            }
         </script>
     </head>
     <body>
@@ -85,30 +82,5 @@
         <style>
             #strsange { background-color: #27ae60 }
         </style>
-        <script>
-            $(function() {
-                try {
-                    /*$.ajax({
-                        dataType: "html",
-                        url: "/js/apps/readlist/templates/editcontent.tpl"
-                       }).done(function(response) {
-                           $(response).appendTo("body");
-                            require(["Kimo/core", "readlist.app"], function(Kimo, app) {
-                                console.log(Kimo)
-                            	console.log(" --> appp -->", app)
-                            var ApplicationManager = require("Kimo.ApplicationManager");
-                            ApplicationManager.start("ReadList");
-                        }); 
-                    }); */
-                       
-                }
-                catch (e) {
-                    console.log("error", e);
-                }
-            
-            });
-       
-        </script>
-
     </body>
 </html>

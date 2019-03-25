@@ -235,7 +235,7 @@ define(["Kimo/core"], function(Kimo){
             initPlugins: function(){
                 var def = new $.Deferred(); 
                 $.ajax({
-                    url: appPath+"js/apps/readlist/contenttypes/config.json",
+                    url: appPath+"/apps/readlist/contenttypes/config.json",
                     dataType:"json"
                 }).done(function(response){
                     var pluginPath = response.path;

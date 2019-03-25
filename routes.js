@@ -1,5 +1,6 @@
 
 define(["Kimo.NavigationManager"],function(NvgManager) {
+    
     NvgManager.registerRoutes("ReadList", { 
     
         "home:home": {
