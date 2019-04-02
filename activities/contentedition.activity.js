@@ -38,7 +38,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             var tplParams = ContentTypePluginManager.getAvailableContentConf();
             var editBoard = Mustache.render($("#edit-board-tpl").html(), tplParams);
             $(this.view.view).find(".edit-zone").append(editBoard);
-            console.log("radical --> ", editBoard)
+         
             this.editSection = $(this.view.view).find(".edit-zone").eq(0);
             this.contentSection = $(this.view.view).find(".data-container").eq(0);
             this.editBoard = $(this.view.view).find("#board-wrapper").eq(0);
@@ -53,7 +53,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         configure: function() {    
-            /*create content list*/
+            /* create content list */
             this.contentList = this._createContentList();
             this.contentList.render($(this.dataContainer));
             this._bindEvents();
@@ -64,21 +64,26 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         /** Afficher le board */
-        showBoardAction : function(routeId,selectedContent){
+        showBoardAction : function(routeId, selectedContent) {
             var self = this;
-            if(routeId){
-                var dataPromise = ReadList.models.bookRepository.findById(routeId);
-                dataPromise.done(function(entity){
+            
+            if (routeId) {
+                var dataPromise = ReadList.models.bookRepository.findById(routeId)
+                dataPromise.done(function(entity) {
                     self._handleContentChanged(entity);
-                });
-                return;
+                }).fail(() => {
+                    let entity = new ReadList.models.Node
+                    self._handleContentChanged(entity)
+                })
             }
-            if(selectedContent){
+
+            if (selectedContent) {
                 this._handleContentChanged(selectedContent);
             }
         },
         
         _handleContentChanged: function(currentContent) {
+
             this.currentContent = currentContent;
             ContentTypePluginManager.setMainContent(currentContent);
             this.currentForm = null;
@@ -87,18 +92,20 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             this.editBoardIsVisible = true;
             this.searchMode = false;
             this.templateCache = {};
-            if (!this.currentContent)
-                throw "CurrentContentNotFound";
+            if (!this.currentContent) { throw "CurrentContentNotFound"; }
+            /* on --> change */
             this.currentContent.on("change", $.proxy(this._handleCurrentContentChange, this));
             this._renderCurrentDocument();
             ContentTypePluginManager.initPlugins().done($.proxy(this._populateDataView,this));
         },
+
         _populateDataView: function() {
             var self = this;
             var promise = this.currentContent.loadContents();
+            console.log(promise)
             self.contentList.showLoadingMsg();
-            promise.done(function(response) {
-                self.contentList.setData(self.currentContent.getContents(), true);
+            promise.then(function(data) {
+                self.contentList.setData(data, true);
             });
         },
         /*no need*/
@@ -150,12 +157,14 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 this.searchMode = true;
             }
         },
+
         _resetContentScroller: function() {
             $(this.contentSection).find(".nano").nanoScroller({
                 alwaysVisible: true,
                 scroll: 'top'
             });
         },
+
         _initScroller: function() {
             $(this.contentSection).find(".nano").nanoScroller({
                 alwaysVisible: true
@@ -171,9 +180,11 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             });
 
         },
-        onSimilarResult: function(content) {
 
+        onSimilarResult: function(content) {
+            console.log("nice")
         },
+        
         _createContentList: function() {
             var self = this;
             /* itemRenderer */
@@ -188,7 +199,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
                 var context = "main";
                 var renderer = Mustache.render(self.currentContentType.getContentTemplate(context), data);
                 /* experimental */
-                if(typeof self.currentContentType.render == "function"){
+                if (typeof self.currentContentType.render == "function") {
                     renderer = self.currentContentType.render(data,context);
                 }
                 renderer = $(renderer).attr("data-contentType", contentType);
@@ -290,6 +301,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
             });
             return dataList;
         },
+
         _renderCurrentDocument: function() {
             var render = Mustache.render($("#content-book-tpl").html(), this.currentContent.toJson(true));
             $(this.view.view).find(".header").html(render);
@@ -301,25 +313,27 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         
         /* Ajouter un contenu */
-        _addNewContent: function(action) {
+        _addNewContent: function() {
+            
             var self = this;
             var entity = this.currentForm.getData(); //row data
+            
             action = this.nxtAction || "update";
-            if (typeof entity.save !== "function") { 
+            if (typeof entity.save !== "function") {
                 action = "create";
                 var data = entity.data;
                 entity = ContentTypePluginManager.createContent(data.__entity__);
                 entity.set(data);
-            }else{
+            } else {
                 action = (entity.isNew()) ? "create" : "update";
             }
 
-            entity.set("container", this.currentContent.getCtnKey());
-            /* avant enregistrement --> donner la chance au plugin de faire quelque chose 
-             * user
-             * */
+            const currentCtnKey = this.currentContent ? this.currentContent.getCtnKey() : "DETACHED"
+
+
+            entity.set("container", currentCtnKey);
+            /* Avant enregistrement --> donner la chance au [plugin] de faire quelque chose */
             self.currentContentType.onBeforeEntitySave(entity).then(function (entity) {
-                
                 if (!entity.checkData()) throw "EntityDataIsNotValid";
                 entity.save().then(function() {
                     self.currentContentType.onEntitySave(entity);
@@ -385,7 +399,7 @@ define(["Kimo/core", "ReadList.models", "ReadList.forms", "ReadList.ContentTypeP
         },
         /* whe only are interested in subcontents*/
         _handleCurrentContentChange: function(reason, entity, changes) {
-            /*last is the new one*/
+            /* last is the new one */
             var content = this.currentContent.getLastEditedContent();
             var lastReason = this.currentContent.getLastContentChangeAction();
             this.contentList.updateData(content, lastReason);

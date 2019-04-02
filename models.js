@@ -1,20 +1,48 @@
 var ReadList = ReadList || {};
 define(["Kimo/core"], function(Kimo) {
     var ModelManager = require("Kimo.ModelManager");
+   
+    /* Use the rest service */
+
     ReadList.models = (function() {
+
+
+        const nodeEntity = ModelManager.createEntity({
+            
+            name: "Node",
+            defaults: {
+                isRoot: false,
+                type: "Node",
+                data: null,
+                properties: null
+            },
+            
+            getPath: () => {},
+
+            loadContents: function() {
+                return new Promise((done) => {
+                    done([])
+                })
+            },
+
+            getCtnKey: function() {
+                return this.name + ":" + this.uid;   
+            }
+        })
+
+        const NodeRepository = ModelManager.createRepository({
+            
+            repositoryName: "NodeRepository",
+            model: nodeEntity,
+        })
 
         var documentEntity = ModelManager.createEntity({
             name: "Book",
-            /*definition: { useful for server side verifications
-             title:  "text",//int:datatime:timestamp:collection
-             author: "text",
-             note:"text",
-             type: "int",
-             source: "text" //handle jointure :helper            
-             },*/
+  
             constraint: {
                 title: ["int", "notempty"]
             },
+            
             defaults: {
                 title: "",
                 subtitle: "",
@@ -106,15 +134,16 @@ define(["Kimo/core"], function(Kimo) {
                 this.set("contents", contents);//notifie the data list
             },
             
-            toJson: function(){
+            toJson: function() {
                 var json = this.super().toJson();//add more method there
                 /*handle all dynfields here*/
                 var author = this.getAuthor();
-                if(Kimo.jquery.isPlainObject(author)){
+                if(Kimo.jquery.isPlainObject(author)) {
                     var results = [];
-                    Kimo.jquery.each(author,function(key,author){
+                    Kimo.jquery.each(author,function(key,author) {
                         results.push(author);
                     });
+
                     json.author = results.join(", ");
                 }
                 return json;
@@ -137,31 +166,37 @@ define(["Kimo/core"], function(Kimo) {
                 this._cidUidMap[content.uid] = content.getCid();
                 return contentJson;
             },
+
             createContent: function(content, silent) {
                 this.contentList.set(content["_cid"], content, silent);
             },
+
             updateContent: function(content, silent) {
                 this.contentList.set(content["_cid"], content, silent);
             },
+
             deleteContent: function(content, silent) {
                 this.contentList.deleteItem(content, silent);
             },
+
             getContentByCid: function(cid) {
                 return this.contentList.get(cid);
             },
+
             getContentByUid: function() {
 
             },
+
             handleContent: function(content, action, contentType, silent) {
                 silent = (typeof silent == "boolean") ? silent : false;
                 var availableActions = ["create", "update", "delete"];
-                if ($.inArray(action, availableActions) == -1)
-                    return;
+                if ($.inArray(action, availableActions) == -1) { return };
                 var contentData = this._checkContent(content, contentType);
                 this.lastContentsAction = (action == "delete") ? "remove" : action;
                 this.lastEditedContent = contentData;
-                if (contentData)
-                    this[action + "Content"].call(this, contentData, silent);
+                if (contentData) {
+                this[action + "Content"].call(this, contentData, silent);
+                }
             }
         });
 
@@ -169,19 +204,18 @@ define(["Kimo/core"], function(Kimo) {
             repositoryName: "BookRepository", //modifier chan
             route: "",
             model: documentEntity, //user string or prefix
-            getPath: function(){
+            getPath: function() {
                 return "/cnamOpennote/webservices/contents";
             }
         })
 
-        BookRepository = new BookRepository;
-
-        /* SubContent Data */
-
-        /*public Api*/
+     
+        /* public Api */
         return {
             DocumentItem: documentEntity,
-            bookRepository: BookRepository
+            Node: nodeEntity,
+            bookRepository: new BookRepository,
+            NodeRepository: new NodeRepository
         }
     })();
     return ReadList.models;

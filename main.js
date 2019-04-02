@@ -2,6 +2,7 @@ var ReadList = ReadList || {};
 Kimo.require.config({
     paths: {
         "ReadList.route": "apps/readlist/routes",
+        "ReadList.config": "apps/readlist/config",
         "ReadList.forms": "apps/readlist/forms",
         "ReadList.models": "apps/readlist/models",
         "ReadList.ContentTypePluginMng": "apps/readlist/components/ContentTypeManager",
@@ -53,7 +54,7 @@ define("ReadList",
             },
             
             onNotification: function(message) {
-                /*according to message, call appropriate activity*/
+                /* according to message, call appropriate activity */
                 if (message.topic === "newContent") {
                 }
                 if (message.topic === "/newTwitter") {

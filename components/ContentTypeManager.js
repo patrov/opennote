@@ -6,7 +6,7 @@
  * this.editorBoard.append(editor);
  * var data = editor.getData(); 
  **/
-define(["Kimo/core"], function(Kimo){
+define(["Kimo/core", "ReadList.config"], function(Kimo, AppConfig) {
     
     var  ContentTypePluginManager = (function(){
         var _contentTypes = {};
@@ -35,27 +35,29 @@ define(["Kimo/core"], function(Kimo){
             },
         
             createEntity: function(name,config){
-                try{
+                try {
                     config["name"] = name; 
                     /* every contents should have a container and a type*/
                     config.defaults["container"] = "";
                     config.defaults["uid"] = null; //use defaut id key
                     config.defaults["__contentType__"] = this.getName();
-                    if(!config.hasOwnProperty("getPath")){
-                        config.getPath = function(){
-                            return "/cnamOpennote/webservices/contents"
+
+                    if (!config.hasOwnProperty("getPath")) {
+                        config.getPath = function() {
+                            console.log(AppConfig["CONTENT_PATH"])
+                            return AppConfig["CONTENT_PATH"]
                         }
                     }
                     /* histoire */
-                    if(config.hasOwnProperty("getIndexationInfos")){
+                    if (config.hasOwnProperty("getIndexationInfos")){
                         console.log("config",config.getIndexationInfos());
                     }
                     
                     var entity = Kimo.ModelManager.createEntity(config);
                     _entitiesMap[name] = entity;
                 }
-                catch(e){
-                    throw 'EntityNotFound error:'+e; 
+                catch (e) {
+                    throw 'EntityNotFound error:' + e; 
                 }
             },
         
@@ -99,34 +101,35 @@ define(["Kimo/core"], function(Kimo){
             }
         };
     
-        var getContentUid = (function(){
+        var getContentUid = (function() {
             var compteur = 0;
             var prefix = "content_";
             return function(){
                 compteur = compteur + 1;
-                return prefix+compteur;
+                return prefix + compteur;
             }
         })();
    
         var publicApi = {
         
-            setMainContent: function(content){
+            setMainContent: function(content) {
                 _mainContent = content; 
             },
         
-            getMainContent: function(){
+            getMainContent: function() {
+                if (!_mainContent) { return }
                 return _mainContent.getCtnKey();
             },
         
-            getEditor : function(formName){
-                try{
+            getEditor : function(formName) {
+                try {
                     return Kimo.FormManager.getFormInstance(formName);
-                }catch(e){
+                } catch(e){
                     console.log(e);
                 }
             },
         
-            showModal: function(content,config){  
+            showModal: function(content,config) {  
                 config = config || {};
                 _formModal = $($("#generic-dialog-tpl").html());
                 $("#content-modal").remove();

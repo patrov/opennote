@@ -109,27 +109,25 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
         createModels: function() {
             this.createEntity("Quote", {
                 defaults: {
-                    page: "",
-                    context: "",
-                    source: "",
-                    content: "",
-                    comment: "",
-                    tags: "",
-                    "__indexation__":["page","context","container","source","content","comment","tags:csv"]
+                    page: "toto, toto1",
+                    context: "my contexte",
+                    source: "my source",
+                    content: "content mastif",
+                    comment: "my comment -- --",
+                    tags: "toto, blaze, indeed",
+                    "__indexation__": ["page","context","container","source","content","comment","tags:csv"]
                 },
-                checkData: function() {
+                checkData: function(sourceLess = true) {
                     var result = true;
                     if ($.trim(this.getPage()) == "")
                         result = false;
-                    if ($.trim(this.getSource()) == "")
+                    if (!sourceLess && $.trim(this.getSource()) == "")
                         result = false;
                     if ($.trim(this.getContent()) == "")
                         result = false;
                     if ($.trim(this.getComment()) == "")
                         result = false;
-                    if (result == "false") {
-                        
-                    }
+                    
                     return result;
                 }
             })
@@ -190,7 +188,7 @@ define(["Kimo/core","ReadList.ContentTypePluginMng"], function(Kimo,ContentTypeP
             })
         },
         
-        onBeforeEntitySave: function(entity) {
+        onBeforeEntitySave: function(entity, next) {
             entity.set("source", ContentTypePluginManager.getMainContent());
             return this.createPromise(entity);
         },

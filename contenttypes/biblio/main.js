@@ -17,6 +17,7 @@ define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!bibli
     var listTpl = $($("#biblio-tpl").html()).find("#list-tpl").html();
     
     ContentypeManager.registerContentType("BiblioType",{         
+        
         _init: function() {
             /* bind events here */
             this.ctnKey = this.name+":"+this.getUid();
@@ -89,7 +90,7 @@ define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!bibli
                     this.contentData = new Kimo.SmartList({});
                     console.log("init:Strange");
                 },
-                loadContents: function(){
+                loadContents: function() {
                     var self = this;
                     var def = new $.Deferred();
                     var dataPromise = Kimo.Utils.makeRestRequest("/cnamOpennote/webservices/contents/subcontents",
@@ -147,11 +148,11 @@ define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!bibli
                     tags: {
                         label: "Tag",
                         type: "text",
-                        placeholder:"Mot clé séparé par une virgule"
+                        placeholder:"Mots-clés séparé par une virgule"
                     } 
                 },
                 
-                beforeRender: function(fieldMaps,fields){
+                beforeRender: function(fieldMaps,fields) {
                     fieldMaps.title = $(fieldMaps.title).wrap("<field>").parent().html();
                     fieldMaps.author = $(fieldMaps.author).wrap("<field>").parent().html();
                     fieldMaps.publisher = $(fieldMaps.publisher).wrap("<field>").parent().html();
@@ -162,7 +163,7 @@ define("biblio.type", ["ReadList.ContentTypePluginMng", "Kimo/core", "text!bibli
                     return form;
                 },
                 
-                validator: function(data){
+                validator: function(data) {
                     var errors = [];
                     var isValid = true;
                     if ($.trim(data.author) == "") {
